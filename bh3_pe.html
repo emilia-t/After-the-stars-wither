@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="zh">
+<script>
+    var mobile_bs = {
+        versions: function() {
+            var u = navigator.userAgent;
+            return {
+                trident: u.indexOf('Trident') > -1, //IE内核
+                presto: u.indexOf('Presto') > -1,  //opera内核
+                webKit: u.indexOf('AppleWebKit') > -1,  //苹果、谷歌内核
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,  //火狐内核
+                mobile: !! u.match(/AppleWebKit.*Mobile.*/) || !! u.match(/AppleWebKit/) && u.indexOf('QIHU') && u.indexOf('QIHU') > -1 && u.indexOf('Chrome') < 0,  //是否为移动终端
+                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),  //ios终端
+                android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,  //android终端或者uc浏览器
+                iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1,   //是否为iPhone或者QQHD浏览器
+                iPad: u.indexOf('iPad') > -1,     //是否iPad
+                webApp: u.indexOf('Safari') == -1   //是否web应该程序，没有头部与底部
+            }
+        } ()
+    };
+    if (!mobile_bs.versions.mobile) {
+        window.location.href = "bh3.html";
+    }
+</script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="favicon2.ico">
+    <title>在星空枯萎之后-移动端</title><!--选择非弹性布局-->
+    <!--<script src="https://libs.baidu.com/jquery/2.0.0/jquery.js"></script>-->
+    <style>
+        /*动画*/
+        @keyframes card_show{from {height:76px;} to {height:200px;}}
+        @keyframes card_hide{from {height:200px;} to {height:76px;}}
+        @keyframes pao_ma_deng {
+            0%{
+                background:white;
+            }
+            25%{
+                background: #4781ff;
+            }
+            50%{
+                background: #b26498;
+            }
+            100%{
+                background: red;
+            }
+        }
+        @keyframes game_shade {
+            from{top:-100%}
+            to{top:4%}
+        }
+        @keyframes game_shade_2 {
+            from{top:4%}
+            to{top:-100%}
+        }
+        /*卡片*/
+        #show{width:84%;position:absolute;left:5%;top:26px}
+        .card{width:20%;height:76px;overflow:hidden;margin:5px;transition:0.4s;}
+        .head_portrait{width:90%;border-radius:90%;margin-left: 3px}
+        .card_p{width:90%;text-align:center;font-size:8px;margin:2px 0 9px 0}
+        /*背景*/
+        html{width: 100%;height: 100%;overflow-x: hidden;overflow-y:scroll;}
+        html::-webkit-scrollbar{width: 10px;height: 1px;}
+        html::-webkit-scrollbar-thumb{border-radius: 10px;-webkit-box-shadow: inset 0 0 5px rgb(221, 223, 255);background: rgb(157, 154, 255);}
+        html::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 5px rgb(218, 216, 255);border-radius:10px;background:#c4c6ed;}
+        body{width:100%;height:100%;margin:0}
+        #background{width:100%;height:100%;margin:0;border:0;padding:0;position:absolute;top:0;z-index:-10}
+        #background_img{width:100%;height:100%;object-fit: cover;background:url("img/bronya.jpg") no-repeat center center;background-size:100% 100%;}
+        #background_color{position:absolute;width:100%;height:290px;top:100%;background:white}
+        .bg-blur{float:left;width:100%;background-repeat:no-repeat;background-position:center;background-size:cover;-webkit-filter:blur(4px);-moz-filter:blur(4px);-o-filter:blur(4px);-ms-filter:blur(4px);filter:blur(4px);}
+        /*菜单*/
+        #menu{width:86%;height:26px;background:rgba(205,207,255,0.51);position:fixed;top:0;left:8%;margin: 0;border-radius:0 0 20px 20px;z-index:100}
+        #menu_ul{width:100%;height:26px;list-style:none;margin:0;padding: 0 0 0 3px}
+        .menu_li{width:20%;height:26px;left:0;margin:6px 0 0 0;float:left;font-size:10px}
+        a{text-decoration:none;}
+        a:link{color:#4058ff}
+        a:visited{color:#4058ff}
+        a:active{color:red}
+        #search{display:none;}
+        #search input{border:0;border-radius:2px;outline:none;width:90px;height:18px;font-size:8px;}
+        #starfish_1{width: 10px;position: fixed;top:6px;left:25px}
+        #starfish_2{width: 10px;position: fixed;top:14px;left:40px}
+        #starfish_2_1{width: 10px;position: fixed;top:7px;left:92px}
+        #starfish_3{width: 10px;position: fixed;top:10px;left:149px}
+        #starfish_4{width: 10px;position: fixed;top:15px;left:180px}
+        #starfish_5{width: 10px;position: fixed;top:-1px;left:240px}
+        #starfish_5_1{width: 10px;position: fixed;top:18px;left:280px}
+        #starfish_6{width: 10px;position: fixed;top:13px;left:220px}
+        #summer{width: 20px;position: fixed;top:6px;left:4px}
+        #game_shade{background: rgba(255, 255, 255, 0.15);width: 100%;height: 94%;position: fixed;top:-100%;z-index: 1000;transition: 1s}
+        #game_over{width: 120px;height:120px;border-radius: 120px;position: fixed;top:-100%;transition: 1s}
+        #bgm{width: 300px;height: 40px;position: fixed;bottom:10px;left:12%;outline: 0}
+        #bgm_1{display: none}
+    </style>
+</head>
+<body>
+<a name="top" style="position:absolute;top:0"></a>
+    <pre style="position:fixed;top:80px;left: -7px;font-size: 8px">
+    庆
+    典
+    结
+    束
+    ，
+    已
+    关
+    闭
+    开
+    头
+    动
+    画
+    及
+    音
+    乐
+    </pre>
+    <div id="menu"><!--顶部菜单（始终悬浮于顶部）-->
+        <img src="img/starfish1.png" id="starfish_1" alt="海星"/>
+        <img src="img/starfish2.png" id="starfish_2" alt="海星"/>
+        <img src="img/starfish2.png" id="starfish_2_1" alt="海星"/>
+        <img src="img/starfish3.png" id="starfish_3" alt="海星"/>
+        <img src="img/starfish4.png" id="starfish_4" alt="海星"/>
+        <img src="img/starfish5.png" id="starfish_5" alt="海星"/>
+        <img src="img/starfish5.png" id="starfish_5_1" alt="海星"/>
+        <img src="img/starfish6.png" id="starfish_6" alt="海星"/>
+        <img src="img/summer.png" id="summer" alt="夏"/>
+        <ul id="menu_ul">
+            <li class="menu_li">
+                <b><a href="pcr.html">公主连群员表</a></b>
+            </li>
+            <li class="menu_li">
+                <b><a href="#" onclick="night()">黑模式</a>&nbsp;&nbsp;<a href="#" onclick="night()">明模式</a></b>
+            </li>
+            <li class="menu_li">
+                <b><a href="#top">顶部</a>&nbsp;&nbsp;<a href="#bottom">底部</a></b>
+            </li>
+            <li class="menu_li">
+                <b><a href="#" onclick="
+                if(y%=2){
+                    document.getElementById('search').style.display='none';
+                    y++;
+                    console.log(y)
+                }else{
+                    document.getElementById('search').style.display='block';
+                    y++;
+                    console.log(y)
+                }">通过QQ查找</a></b>
+                <div id="search"><!--通过QQ查找信息-->
+                    <input placeholder="下次查找时请清空输入框" type="text" onchange="find(this)"/>
+                </div>
+            </li>
+            <li class="menu_li">
+                <b><a href="#" onclick="pao_ma_deng()">马灯</a>&nbsp;<a href="#" onclick="bo_lang()">波浪</a>&nbsp;<a href="#" id="unfold" onclick="unfold()">展开</a></b>
+            </li>
+        </ul>
+    </div>
+    <div id="background" class="bg-blur"><!--背景-->
+        <div id="background_img"><!--前半部分图片背景-->
+        </div>
+        <div id="background_color"><!--后半部分颜色背景-->
+        </div>
+    </div>
+    <div id="game_shade"><!--游戏用的遮蔽层-->
+        <p><b><span style="font-size:8px;line-height:110px;color:red">&nbsp;&nbsp;&nbsp;遮罩层已开启！</span></b></p>
+    </div>
+<div id="show"><!--内容界面，群员信息的方格-->
+    <div id="0" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2647910435&s=640&mType=friendlist"/><!--头像-->
+        <div id="2647910435"><!--信息层-->
+            <p class="card_p"><b>群:</b>老非酋了</p>
+            <p class="card_p"><b>QQ:</b>2647910435</p>
+            <p class="card_p"><b>游:</b>我天命上班</p>
+            <p class="card_p"><b>游ID:</b>136969296</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已回归舰团</p><!--BackCount:1;Time:202007201351-->
+        </div>
+    </div>
+    <div id="1" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1753492785&s=640&mType=friendlist"/><!--头像-->
+        <div id="1753492785">
+            <p class="card_p"><b>群:</b>黎明就在眼前</p>
+            <p class="card_p"><b>QQ:</b>1753492785</p>
+            <p class="card_p"><b>游:</b>黎明就在眼前</p>
+            <p class="card_p"><b>游ID:</b>136728733</p>
+            <p class="card_p"><b>惯称:</b>黎明酱</p>
+            <p class="card_p"><b>备注:</b>副官</p>
+        </div>
+    </div>
+    <div id="2" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2081618670&s=640&mType=friendlist"/><!--头像-->
+        <div id="2081618670">
+            <p class="card_p"><b>群:</b>坟头学习🐲🐲</p>
+            <p class="card_p"><b>QQ:</b>2081618670</p>
+            <p class="card_p"><b>游:</b>坟头学习</p>
+            <p class="card_p"><b>游ID:</b>135738630</p>
+            <p class="card_p"><b>惯称:</b>小坟坟</p>
+            <p class="card_p"><b>备注:</b>副官</p>
+        </div>
+    </div>
+    <div id="3" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=979835838&s=640&mType=friendlist"/><!--头像-->
+        <div id="979835838">
+            <p class="card_p"><b>群:</b>朔月</p>
+            <p class="card_p"><b>QQ:</b>979835838</p>
+            <p class="card_p"><b>游:</b>正义的伙伴</p>
+            <p class="card_p"><b>游ID:</b>136713797</p>
+            <p class="card_p"><b>惯称:</b>女装的伙伴</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="4" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=805258120&s=640&mType=friendlist"/><!--头像-->
+        <div id="805258120">
+            <p class="card_p"><b>群:</b>你怎么这个亚子</p>
+            <p class="card_p"><b>QQ:</b>805258120</p>
+            <p class="card_p"><b>游:</b>你怎么这个亚子！</p>
+            <p class="card_p"><b>游ID:</b>136768490</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="5" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1348479725&s=640&mType=friendlist"/><!--头像-->
+        <div id="1348479725">
+            <p class="card_p"><b>群:</b>重装小兔05号机</p>
+            <p class="card_p"><b>QQ:</b>1348479725</p>
+            <p class="card_p"><b>游:</b>魔法少女德丽傻</p>
+            <p class="card_p"><b>游ID:</b>132576781</p>
+            <p class="card_p"><b>惯称:</b><span style="color:red">小</span><span style="color:green">兔</span><span style="color:blue">;兔</span><span style="color:violet;">子</span></p>
+            <p class="card_p"><b>备注:</b>舰团长</p>
+        </div>
+    </div>
+    <div id="6" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1961706345&s=640&mType=friendlist"/><!--头像-->
+        <div id="1961706345">
+            <p class="card_p"><b>群:</b>吸血鬼德丽喵</p>
+            <p class="card_p"><b>QQ:</b>1961706345</p>
+            <p class="card_p"><b>游:</b>吸血鬼德丽喵</p>
+            <p class="card_p"><b>游ID:</b>135966656</p>
+            <p class="card_p"><b>惯称:</b>咲酱</p>
+            <p class="card_p"><b>备注:</b>副官</p>
+        </div>
+    </div>
+    <div id="7" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1658548955&s=640&mType=friendlist"/><!--头像-->
+        <div id="1658548955">
+            <p class="card_p"><b>群:</b>临冉</p>
+            <p class="card_p"><b>QQ:</b>1658548955</p>
+            <p class="card_p"><b>游:</b>临冉</p>
+            <p class="card_p"><b>游ID:</b>132715184</p>
+            <p class="card_p"><b>惯称:</b>临冉</p>
+            <p class="card_p"><b>备注:</b>本站站长</p>
+        </div>
+    </div>
+    <div id="8" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2795732614&s=640&mType=friendlist"/><!--头像-->
+        <div id="2795732614">
+            <p class="card_p"><b>群:</b>小兔RBQ已被就地正法</p>
+            <p class="card_p"><b>QQ:</b>2795732614</p>
+            <p class="card_p"><b>游:</b>君寻</p>
+            <p class="card_p"><b>游ID:</b>136549961</p>
+            <p class="card_p"><b>惯称:</b>君寻</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="9" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=848688381&s=640&mType=friendlist"/><!--头像-->
+        <div id="848688381">
+            <p class="card_p"><b>群:</b>你已被踢出群聊</p>
+            <p class="card_p"><b>QQ:</b>848688381</p>
+            <p class="card_p"><b>游:</b>初音未来</p>
+            <p class="card_p"><b>游ID:</b>133923510</p>
+            <p class="card_p"><b>惯称:</b>初音殿下</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="10" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2795689297&s=640&mType=friendlist"/><!--头像-->
+        <div id="2795689297">
+            <p class="card_p"><b>群:</b>该群已被群主解散</p>
+            <p class="card_p"><b>QQ:</b>2795689297</p>
+            <p class="card_p"><b>游:</b>o(≧v≦)o</p>
+            <p class="card_p"><b>游ID:</b>135434392</p>
+            <p class="card_p"><b>惯称:</b>颜酱</p>
+            <p class="card_p"><b>备注:</b>已离开舰团及本群</p>
+        </div>
+    </div>
+    <div id="11" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=824822765&s=640&mType=friendlist"/><!--头像-->
+        <div id="824822765">
+            <p class="card_p"><b>群:</b>神选者不需要救赎</p>
+            <p class="card_p"><b>QQ:</b>824822765</p>
+            <p class="card_p"><b>游:</b>神选者不需要救赎</p>
+            <p class="card_p"><b>游ID:</b>136607192</p>
+            <p class="card_p"><b>惯称:</b>神选者</p>
+            <p class="card_p"><b>备注:</b>副官</p>
+        </div>
+    </div>
+    <div id="12" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=3361577961&s=640&mType=friendlist"/><!--头像-->
+        <div id="3361577961">
+            <p class="card_p"><b>群:</b>时间长了好多</p>
+            <p class="card_p"><b>QQ:</b>3361577961</p>
+            <p class="card_p"><b>游:</b>什么的没有</p>
+            <p class="card_p"><b>游ID:</b>138863629</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已回归舰团</p><!--BackCount:1;Time:202007201352-->
+        </div>
+    </div>
+    <div id="13" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=997509742&s=640&mType=friendlist"/><!--头像-->
+        <div id="997509742">
+            <p class="card_p"><b>群:</b>Dorothy</p>
+            <p class="card_p"><b>QQ:</b>997509742</p>
+            <p class="card_p"><b>游:</b>歩いている修羅場</p>
+            <p class="card_p"><b>游ID:</b>136276140</p>
+            <p class="card_p"><b>惯称:</b>益利多</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="14" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2192680130&s=640&mType=friendlist"/><!--头像-->
+        <div id="2192680130">
+            <p class="card_p"><b>群:</b>。</p>
+            <p class="card_p"><b>QQ:</b>2192680130</p>
+            <p class="card_p"><b>游:</b>野葫芦引</p>
+            <p class="card_p"><b>游ID:</b>144411617</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="15" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2496779165&s=640&mType=friendlist"/><!--头像-->
+        <div id="2496779165">
+            <p class="card_p"><b>群:</b>天涯沦落人</p>
+            <p class="card_p"><b>QQ:</b>2496779165</p>
+            <p class="card_p"><b>游:</b>天涯沦落人</p>
+            <p class="card_p"><b>游ID:</b>136665427</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="16" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2746853534&s=640&mType=friendlist"/><!--头像-->
+        <div id="2746853534">
+            <p class="card_p"><b>群:</b>choices</p>
+            <p class="card_p"><b>QQ:</b>2746853534</p>
+            <p class="card_p"><b>游:</b>choices</p>
+            <p class="card_p"><b>游ID:</b>141318167	</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="17" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=811592290&s=640&mType=friendlist"/><!--头像-->
+        <div id="811592290">
+            <p class="card_p"><b>群:</b>玄武纪师</p>
+            <p class="card_p"><b>QQ:</b>811592290</p>
+            <p class="card_p"><b>游:</b>玄武纪师</p>
+            <p class="card_p"><b>游ID:</b>139183231	</p>
+            <p class="card_p"><b>惯称:</b>玄武</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="18" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=162295994&s=640&mType=friendlist"/><!--头像-->
+        <div id="162295994">
+            <p class="card_p"><b>群:</b>活得像个冗談的冗談</p>
+            <p class="card_p"><b>QQ:</b>162295994</p>
+            <p class="card_p"><b>游:</b>冗談</p>
+            <p class="card_p"><b>游ID:</b>137758057</p>
+            <p class="card_p"><b>惯称:</b>冗谈</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="19" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1269317054&s=640&mType=friendlist"/><!--头像-->
+        <div id="1269317054">
+            <p class="card_p"><b>群:</b>早川</p>
+            <p class="card_p"><b>QQ:</b>1269317054</p>
+            <p class="card_p"><b>游:</b>早川</p>
+            <p class="card_p"><b>游ID:</b>136981615</p>
+            <p class="card_p"><b>惯称:</b>早川</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="20" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1763844244&s=640&mType=friendlist"/><!--头像-->
+        <div id="1763844244">
+            <p class="card_p"><b>群:</b>韵晾三月的温彦</p>
+            <p class="card_p"><b>QQ:</b>1763844244</p>
+            <p class="card_p"><b>游:</b>韵晾三月的温彦</p>
+            <p class="card_p"><b>游ID:</b>133247692</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="21" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2964607609&s=640&mType=friendlist"/><!--头像-->
+        <div id="2964607609">
+            <p class="card_p"><b>群:</b>300氵</p>
+            <p class="card_p"><b>QQ:</b>2964607609</p>
+            <p class="card_p"><b>游:</b>登峰造极境</p>
+            <p class="card_p"><b>游ID:</b>143795231</p>
+            <p class="card_p"><b>惯称:</b>100水</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="22" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=961060863&s=640&mType=friendlist"/><!--头像-->
+        <div id="961060863">
+            <p class="card_p"><b>群:</b>朱颜花镜</p>
+            <p class="card_p"><b>QQ:</b>961060863</p>
+            <p class="card_p"><b>游:</b>朱颜花镜</p>
+            <p class="card_p"><b>游ID:</b>133906074</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="23" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1369392718&s=640&mType=friendlist"/><!--头像-->
+        <div id="1369392718">
+            <p class="card_p"><b>群:</b>木　之　川</p>
+            <p class="card_p"><b>QQ:</b>1369392718</p>
+            <p class="card_p"><b>游:</b>木 之 川</p>
+            <p class="card_p"><b>游ID:</b>135730743</p>
+            <p class="card_p"><b>惯称:</b>木之川</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="24" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=857626943&s=640&mType=friendlist"/><!--头像-->
+        <div id="857626943">
+            <p class="card_p"><b>群:</b>崔无心</p>
+            <p class="card_p"><b>QQ:</b>857626943</p>
+            <p class="card_p"><b>游:</b>崔无心</p>
+            <p class="card_p"><b>游ID:</b>136559217</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="25" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1581182597&s=640&mType=friendlist"/><!--头像-->
+        <div id="1581182597">
+            <p class="card_p"><b>群:</b>80级新手让我保级</p>
+            <p class="card_p"><b>QQ:</b>1581182597</p>
+            <p class="card_p"><b>游:</b>0</p>
+            <p class="card_p"><b>游ID:</b>未知</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="26" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1743939852&s=640&mType=friendlist"/><!--头像-->
+        <div id="1743939852">
+            <p class="card_p"><b>群:</b>只有一个毕业的樱</p>
+            <p class="card_p"><b>QQ:</b>1743939852</p>
+            <p class="card_p"><b>游:</b>只有一个毕业的樱</p>
+            <p class="card_p"><b>游ID:</b>138824363</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="27" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=3103945871&s=640&mType=friendlist"/><!--头像-->
+        <div id="3103945871">
+            <p class="card_p"><b>群:</b>一夜知秋*</p>
+            <p class="card_p"><b>QQ:</b>3103945871</p>
+            <p class="card_p"><b>游:</b>一夜知秋*</p>
+            <p class="card_p"><b>游ID:</b>144350713</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="28" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=575716004&s=640&mType=friendlist"/><!--头像-->
+        <div id="575716004">
+            <p class="card_p"><b>群:</b>言葉</p>
+            <p class="card_p"><b>QQ:</b>575716004</p>
+            <p class="card_p"><b>游:</b>言葉</p>
+            <p class="card_p"><b>游ID:</b>132041715</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="29" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1152070902&s=640&mType=friendlist"/><!--头像-->
+        <div id="1152070902">
+            <p class="card_p"><b>群:</b>Max丶圣王</p>
+            <p class="card_p"><b>QQ:</b>1152070902</p>
+            <p class="card_p"><b>游:</b>MAXヽ圣王</p>
+            <p class="card_p"><b>游ID:</b>130600273</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团及本群</p>
+        </div>
+    </div>
+    <div id="30" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2987594236&s=640&mType=friendlist"/><!--头像-->
+        <div id="2987594236">
+            <p class="card_p"><b>群:</b>总归会遗憾</p>
+            <p class="card_p"><b>QQ:</b>2987594236</p>
+            <p class="card_p"><b>游:</b>芽芽月</p>
+            <p class="card_p"><b>游ID:</b>138333826</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="31" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2393493189&s=640&mType=friendlist"/><!--头像-->
+        <div id="2393493189">
+            <p class="card_p"><b>群:</b>今生缘丶倾城之恋</p>
+            <p class="card_p"><b>QQ:</b>2393493189</p>
+            <p class="card_p"><b>游:</b>今生缘丶倾城之恋</p>
+            <p class="card_p"><b>游ID:</b>136911112</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="32" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1804294850&s=640&mType=friendlist"/><!--头像-->
+        <div id="1804294850">
+            <p class="card_p"><b>群:</b>挽梦忆笙歌i</p>
+            <p class="card_p"><b>QQ:</b>1804294850</p>
+            <p class="card_p"><b>游:</b>爱情~苦涩</p>
+            <p class="card_p"><b>游ID:</b>137899164</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团及本群</p>
+        </div>
+    </div>
+    <div id="33" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=791015206&s=640&mType=friendlist"/><!--头像-->
+        <div id="791015206">
+            <p class="card_p"><b>群:</b>壹衰烟雨任平生</p>
+            <p class="card_p"><b>QQ:</b>791015206</p>
+            <p class="card_p"><b>游:</b>冯宝宝</p>
+            <p class="card_p"><b>游ID:</b>140221737</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="34" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1304676898&s=640&mType=friendlist"/><!--头像-->
+        <div id="1304676898">
+            <p class="card_p"><b>群:</b>风间琉璃丶</p>
+            <p class="card_p"><b>QQ:</b>1304676898</p>
+            <p class="card_p"><b>游:</b>风间琉璃丶</p>
+            <p class="card_p"><b>游ID:</b>137574688</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+    <div id="35" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1753563708&s=640&mType=friendlist"/><!--头像-->
+        <div id="1753563708">
+            <p class="card_p"><b>群:</b>吸云喵欧欧(๑˙_˙๑)</p>
+            <p class="card_p"><b>QQ:</b>1753563708</p>
+            <p class="card_p"><b>游:</b>吸云喵欧欧</p>
+            <p class="card_p"><b>游ID:</b>140126612</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="36" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1763123826&s=640&mType=friendlist"/><!--头像-->
+        <div id="1763123826">
+            <p class="card_p"><b>群:</b>没有梦想的咸鱼</p>
+            <p class="card_p"><b>QQ:</b>1763123826</p>
+            <p class="card_p"><b>游:</b>没有梦想的咸鱼</p>
+            <p class="card_p"><b>游ID:</b>142499006</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="37" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1554382747&s=640&mType=friendlist"/><!--头像-->
+        <div id="1554382747">
+            <p class="card_p"><b>群:</b>雪泣</p>
+            <p class="card_p"><b>QQ:</b>1554382747</p>
+            <p class="card_p"><b>游:</b>雪泣</p>
+            <p class="card_p"><b>游ID:</b>130273886</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="38" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2532565023&s=640&mType=friendlist"/><!--头像-->
+        <div id="2532565023">
+            <p class="card_p"><b>群:</b>停不下来的团长</p>
+            <p class="card_p"><b>QQ:</b>2532565023</p>
+            <p class="card_p"><b>游:</b>停不下来的团长</p>
+            <p class="card_p"><b>游ID:</b>141056562</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="39" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2540965410&s=640&mType=friendlist"/><!--头像-->
+        <div id="2540965410">
+            <p class="card_p"><b>群:</b>岚瑾</p>
+            <p class="card_p"><b>QQ:</b>2540965410</p>
+            <p class="card_p"><b>游:</b>姬子</p>
+            <p class="card_p"><b>游ID:</b>142196340</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="40" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=3225128687&s=640&mType=friendlist"/><!--头像-->
+        <div id="3225128687">
+            <p class="card_p"><b>群:</b>默</p>
+            <p class="card_p"><b>QQ:</b>3225128687</p>
+            <p class="card_p"><b>游:</b>冰默</p>
+            <p class="card_p"><b>游ID:</b>142963639</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="41" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1786802842&s=640&mType=friendlist"/><!--头像-->
+        <div id="1786802842">
+            <p class="card_p"><b>群:</b>替身</p>
+            <p class="card_p"><b>QQ:</b>1786802842</p>
+            <p class="card_p"><b>游:</b>替身</p>
+            <p class="card_p"><b>游ID:</b>144704061</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+    <div id="42" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=2926301302&s=640&mType=friendlist"/><!--头像-->
+        <div id="2926301302">
+            <p class="card_p"><b>群:</b>和泉纱雾ꦿ᭄゛</p>
+            <p class="card_p"><b>QQ:</b>2926301302</p>
+            <p class="card_p"><b>游:</b>@隐Dr.</p>
+            <p class="card_p"><b>游ID:</b>139576006</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开本群</p>
+        </div>
+    </div>
+    <div id="43" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=1559244914&s=640&mType=friendlist"/><!--头像-->
+        <div id="1559244914">
+            <p class="card_p"><b>群:</b>叫我全保底</p>
+            <p class="card_p"><b>QQ:</b>1559244914</p>
+            <p class="card_p"><b>游:</b>叫我全保底</p>
+            <p class="card_p"><b>游ID:</b>136864237</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>无</p>
+        </div>
+    </div>
+	<div id="44" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
+        <img alt="加载失败" class="head_portrait" src="http://q.qlogo.cn/g?b=qq&nk=3536860773&s=640&mType=friendlist"/><!--头像-->
+        <div id="3536860773">
+            <p class="card_p"><b>群:</b>chary</p>
+            <p class="card_p"><b>QQ:</b>3536860773</p>
+            <p class="card_p"><b>游:</b>安安临死前</p>
+            <p class="card_p"><b>游ID:</b>136783935</p>
+            <p class="card_p"><b>惯称:</b>还没有哦~</p>
+            <p class="card_p"><b>备注:</b>已离开舰团</p>
+        </div>
+    </div>
+</div>
+    <img id="game_over" src=""/>
+    <!--BGM层-->
+    <audio id="bgm" loop="loop" controls=""><source src="music/nazi.mp3" type="audio/mpeg"></audio>
+    <audio id="bgm_1"><source src="music/13121.mp3" type="audio/mpeg"></audio>
+<script>
+     function playPause() {
+         var music = document.getElementById('bgm');//音频控件
+         music.play();
+    }
+    var y=0;//search专用
+    function randomNum(minNum,maxNum){//随机函数
+        switch(arguments.length){
+            case 1:
+                return parseInt(Math.random()*minNum+1,10);
+                break;
+            case 2:
+                return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
+    function set_pao_ma_deng(id,q) {
+        setTimeout(function (){document.getElementById(id).style.animation='pao_ma_deng 2s forwards 1'},500*q);
+    }
+    function arr_sort(arr) {//打乱数组
+        for (var i = 0; i < arr.length; i++) {
+            var iRand = parseInt(arr.length * Math.random());
+            var temp = arr[i];
+            arr[i] = arr[iRand];
+            arr[iRand] = temp;
+        }
+        return arr;
+    }
+    function pao_ma_deng() {//跑马灯
+        var cards_number=document.getElementsByClassName('card').length;
+        var card=new Array();
+        for(var i=0;i<cards_number;i++){card[i]=i}//生成数组
+        for(var q=0;q<cards_number-1;q++){
+            if(q===cards_number-2){
+                var win_id=card.shift();
+                function game_over(id) {
+                var game_over=document.getElementById('game_over');
+                var win_src='http://q.qlogo.cn/g?b=qq&nk='+(document.getElementById(id).querySelector("div").id)+'&s=640&mType=friendlist';
+                console.log('game_over的src'+win_src);
+                game_over.src=win_src;
+                }
+                game_over(win_id);
+            }
+            setTimeout(function (){document.getElementById('game_over').style.top='300px';document.getElementById('game_shade').style.top="-100%";bo_lang() },(cards_number*0.5)*1000);
+            setTimeout(function (){document.getElementById('game_over').style.top='-100%'},(cards_number*0.5)*1000+2000);
+            var new_arr=arr_sort(card);
+            var now_id=new_arr.shift();//取出并删除第一个
+            set_pao_ma_deng(now_id,q)
+        }
+        //开启游戏遮罩
+        document.getElementById('game_shade').style.top="4%";
+    }
+    function set_bo_lang(z) {
+        setTimeout(function (){show_card(document.getElementById(z))},180*z);
+        setTimeout(function (){hide_card(document.getElementById(z))},180*z+500);
+    }
+    function bo_lang() {//波浪
+        var cards_number=document.getElementsByClassName('card').length;
+        for(var z=0 ;z<=cards_number;z++){
+            set_bo_lang(z)
+        }
+    }
+    function random_music(c) {//随机放音乐
+        setTimeout(function () {
+            var x=randomNum(1-10);
+            if(x===5){
+                playPause();
+            }
+        },randomNum(1500,4500)*c);
+    }
+//    for(var c=0;c<=30;c++){
+//        random_music(c);
+//    }
+    var un=0;//展开专属
+    function unfold() {//展开
+        if (un%=2) {
+            un++;
+            document.getElementById('game_shade').style.top="-100%";
+            document.getElementById('unfold').innerText='展开';
+            var cards_number = document.getElementsByClassName('card').length;
+            for (var z = 0; z <= cards_number; z++) {
+                hide_card(document.getElementById(z))
+            }
+        } else {//关闭
+            un++;
+            document.getElementById('game_shade').style.top="4%";
+            document.getElementById('unfold').innerText='关闭';
+            var cards_number = document.getElementsByClassName('card').length;
+            for (var z = 0; z <= cards_number; z++) {
+                show_card(document.getElementById(z))
+            }
+        }
+    }
+    function hide_card(element) {//隐藏
+        element.style.animation="card_hide 0.4s forwards 1";
+        var this_id=parseInt(element.id);
+        var card_number=document.getElementsByClassName('card').length;
+        for(var i=this_id+5;i<card_number;i+=5){
+            if(document.getElementById(i)){
+                var under_card=document.getElementById(i);
+                under_card.style.top=(parseInt(under_card.style.top)-120)+'px';
+            }
+        }
+    }
+    function show_card(element) {//显示
+        element.style.animation="card_show 0.4s forwards 1";
+        var this_id=parseInt(element.id);//被选中的card id
+        var card_number=document.getElementsByClassName('card').length;//card数量
+        for(var i=this_id+5;i<card_number;i+=5){
+            if(document.getElementById(i)){
+                var under_card=document.getElementById(i);
+                under_card.style.top=(parseInt(under_card.style.top)+120)+'px';
+            }
+        }
+        console.log('div'+this_id+'有鼠标移入')
+    }
+    function get_card() {//获取所有的card
+        var card_list=new Array();
+        var card_number=document.getElementsByClassName('card').length;
+        for(var i=0;i<card_number;i++){
+            card_list[i]=document.getElementsByClassName('card')[i];
+        }
+        return card_list;
+    }
+    function delete_card() {//清除所有
+        document.getElementById('show').innerHTML='';
+    }
+    function oder_card() {
+        var list_height=new Array();//高度数据
+        var left=0;//位置变量0-5，判断大于5后重置0
+        for(x=0;x<6;x++){list_height[x]=0;}//初始化高度数据
+        var card=get_card();//获取所有卡片
+        var card_leng=card.length;//长度
+        delete_card();//删除源数据
+        for(var i=0;i<card_leng;i++){
+            if(left===5){left=0;}//重置
+            var new_div=document.createElement('div');
+            new_div.innerHTML=card[i].innerHTML;
+            new_div.id=card[i].id;
+            new_div.style.position='absolute';
+            new_div.style.left=left*70+'px';
+            new_div.style.top=list_height[left]+'px';
+            new_div.className='card';
+            new_div.onmouseenter=function(){show_card(this)};
+            new_div.onmouseleave=function(){hide_card(this)};
+            var show=document.getElementById('show');
+            show.appendChild(new_div);
+            list_height[left]+=85;
+            left++;
+        }
+    }
+    oder_card();
+    var x=0;
+    function night(){
+        if(x%=2){//白
+            document.getElementById('background_img').style.background='url("img/bronya.jpg")  no-repeat center center';
+            document.getElementById('background_img').style.backgroundSize='100% 100%';
+            document.getElementById('background').className='bg-blur';
+            document.getElementById('show').style.color='black';
+            document.getElementById('background_color').style.background='white';
+            x++;
+        }else{
+            document.getElementById('background_img').style.background="#3f3f3f";
+            document.getElementById('background').className='';
+            document.getElementById('show').style.color='white';
+            document.getElementById('background_color').style.background='rgb(63, 63, 63)';
+            x++;
+        }
+    }
+    function find(values){
+        var qq=values.value;
+        if(document.getElementById(qq)){
+            var text=document.getElementById(qq).innerText;
+            alert(text)
+        }else{
+            alert("不存在")
+        }
+    }
+    //window.onload=function () {  bo_lang();playPause();};
+    console.log('加载完成');
+</script>
+<a name="bottom" style="position:absolute;bottom:0;"></a>
+</body>
+</html>

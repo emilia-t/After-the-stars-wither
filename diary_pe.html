@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>群日志</title>
+    <script>
+        function judge() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"
+            ];    //  判断是否是这几个系统
+            var isPC = true;
+            for (let i = 0; i < Agents.length; i++) {
+                if (userAgentInfo.indexOf(Agents[i]) > 0) {
+                    isPC = false;
+                    break;
+                }
+            }
+            return isPC;
+        }
+        var isPC = judge();
+        if(isPC){
+            window.location.href = 'diary.html' //跳转到电脑端页面
+        }
+    </script>
+    <script src="js/vue.js"></script>
+    <link rel="shortcut icon" href="favicon.ico">
+    <style>
+        /*pe版*/
+        *{margin: 0}
+        ::-webkit-scrollbar-track-piece {-webkit-border-radius:0}
+        ::-webkit-scrollbar {width:20px;height:6px}
+        ::-webkit-scrollbar-thumb{outline-offset:2px;border:4px solid #ff7687;background: #ffa1ad}
+        ::-moz-selection {background: #5f5f5f;color: #ffffff;font-weight: 900;}
+        ::selection {background: #5f5f5f;color: #ffffff;font-weight: 900;}
+        body,html{overflow-x:hidden;overflow-y: hidden}
+        /*body::-webkit-scrollbar{display:none;}/*隐藏滚动条*/
+        body{height: 100%}
+        img,#show_frame,#message{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;}
+        /*body::-webkit-scrollbar{width: 20px}*/
+        #flex{width:100%;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            scrollbar-face-color: #6c82ff;
+            scrollbar-base-color: #6c82ff;
+            scrollbar-shadow-color: #6c82ff;
+            scrollbar-highlight-color: #6c82ff;
+            scrollbar-track-color: #6c82ff;
+            scrollbar-arrow-color: #6c82ff;
+            min-width: 925px;
+        }
+        /*显示层*/
+        .outline{width:82.2%;position: relative;border:2px solid #ffb1b8;border-radius: 10px;margin-top: 10px;box-shadow:10px 10px 10px #faecf3;background: #f9f9ff;transition:0.3s;}
+        .outline:hover{margin-top: 6px;width: 82.6%;margin-bottom:4px;border:2px solid #ff9095;box-shadow:13px 13px 20px #fab5ba;background: #ffffff}
+        .hover{margin-top: 6px;width: 82.5%;margin-bottom:4px;border:2px solid #ff9095;box-shadow:13px 13px 20px #fab5ba;background: #ffffff}
+        .img_div{width: inherit;text-align: center;}
+        .img{max-height: 700px;border-radius: 10px;max-width: 90%}
+        .date{text-align: center;line-height: 42px;font-size: 20px;margin: 10px 0px}
+        .text{text-indent:64px;line-height: 40px;font-size: 16px;margin: 6px 6px 6px 20px}
+        /*预览层*/
+        #show_frame{width: 16%;height: 16%;background: rgba(255, 177, 184, 1);position: fixed;z-index: 40;top:50px;right: 80px;border-radius: 6px;font-size: 24px;overflow: hidden;transition: 0.4s;opacity:0;display: none}
+        #triangle{border-top: 20px solid rgba(255, 177, 184, 1);
+            border-right: 20px solid rgba(255, 177, 184, 1);
+            border-bottom: 20px solid rgba(0, 0, 0, 0);
+            border-left: 20px solid rgba(0, 0, 0, 0);position: fixed;top:90px;right: 61px;
+            transform:rotate(45deg);
+            transition: 0.4s;
+        }
+        /*动画*/
+        @keyframes message_hide {
+            0%{
+                top:-60px;
+            }
+            25%{
+                top:0px;
+            }
+            75%{
+                top:0px;
+            }
+            100%{
+                top:-90px;
+            }
+        }
+        /*消息层*/
+        #message{position: fixed;width: 100%;height:44px;z-index: 999;animation: message_hide  2.5s forwards;
+            -moz-animation: message_hide  2.5s forwards;
+            -webkit-animation: message_hide 2.5s forwards;
+            -o-animation: message_hide  2.5s forwards;
+            background: #ffb1b8;
+            line-height: 50px;
+            font-size: 20px;
+        }
+        #mes_title{width: 100%;height: 44px;text-align: center;}
+        /*时间轴*/
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 300px;
+            border-radius: 10px; /*这个属性设置使填充进度条时的图形为圆角*/
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 50px;/*小球宽高*/
+            width: 50px;
+            margin:0 0 -26px 0 ;
+            background: #ff7e85;/*小球颜色*/
+            border-radius: 50%; /*外观设置为圆形*/
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            border-bottom:4px solid #ff7980;/*轴线颜色*/
+        }
+        input[type=range]::-moz-range-progress {
+            background: linear-gradient(to right, #059CFA, white 100%, white);
+            height: 13px;
+            border-radius: 10px;
+        }
+        #slider{opacity: 1;position: fixed;transform: rotate(90deg);height:40px;transition: 0.4s}
+    </style>
+</head>
+<body>
+<!--资源层-->
+<div style="display: none">
+    <img src="img/diary/round.png">
+</div>
+<!--预览层-->
+<div id="show_frame" ><!--显示相应的事件的框架-->
+    <div id="frame_time_type"><!--时间及类型-->
+    </div>
+    <div id="frame_content"><!--部分内容前20个字-->
+    </div>
+    <div id="triangle"><!--小三角-->
+    </div>
+</div>
+<!--时间轴层-->
+<div id="ime_axis" >
+    <input type="range" id="slider" value="0" min="0" max="300" oninput="move_pe(this.value)"/>
+</div>
+<!--消息层-->
+<div id="message">
+    <div id="mes_title"><!--标题-->
+        <h2>欢迎参观「在星空枯萎之后」日志 <b>|</b> Welcome to ATSW team daily !</h2>
+    </div>
+</div>
+<!--视图层-->
+<div id="flex" draggable="false" ><!--flex-->
+    <div class="outline" id="outline" v-for="(diary,i) in list" onmouseover="round_top_change(this)"><!--单个日志-->
+        <div class="date"><!--时间及类型-->
+            <b>{{diary.time.year}}年{{diary.time.month}}月{{diary.time.day}}日{{diary.time.hours}}时{{diary.time.minute}}分({{diary.type}})</b>
+        </div>
+        <div class="content" v-for="(diary_content,c) in diary.content"><!--内容---->
+            <div class="text" v-if="create_text(diary_content[1])">
+                <p v-html="diary_content[0]"></p>
+            </div>
+            <div class="img_div" v-if="create_img(diary_content[1])">
+                <img draggable="false" class="img" :src="diary_content[0]">
+            </div>
+        </div>
+    </div>
+</div>
+<!--数据层-->
+<script src='js/diary_data.js'></script>
+<script>
+    /*控制层*/
+    let diary=new Vue({
+        el:'#flex',
+        data:diary_data,
+        methods:{
+            /*创建一个text的节点*/
+            create_text:function(type){
+                if(type==='text'){
+                    return true
+                }
+            },
+            /*创建一个img的节点*/
+            create_img:function(type){
+                if(type==='img'){
+                    return true
+                }
+            }
+        }
+    });
+    /*
+    测试区域
+    */
+    /*时间轴*/
+    var slider=document.getElementById('slider');
+    var initial_time=1586055240;//初始时间
+    var axis_top_config=new Array();//时间轴节点数据
+    var window_height=window.innerHeight;
+    var window_width=window.innerWidth;
+    var flex=document.getElementById('flex');
+    var outline=document.getElementsByClassName('outline');
+    var now_date=new Date();//当前时间
+    var now_round_top=0;//小球高度
+    //当浏览器高度发生变化时重新设置高度，显示的高度，时间轴重绘
+    function window_height_onchange(){
+        slider.style.width=window.innerHeight*0.8+'px';//轴长度
+        slider.style.top=window.innerHeight*0.49+'px';//轴顶部间距
+        let slider_left_max=window.innerWidth-window.innerHeight*0.4;
+        let outline_left_max=(window.innerWidth*(1-0.86))*0.5;//更改第2位数值已改变轴体水平位置
+        slider.style.left=slider_left_max-outline_left_max+'px';//轴右侧边距
+        flex.style.height=window.innerHeight+'px';//设置flex的初始高度
+        for(i=0;i<outline.length;i++){//设置每个日志的初始左边距
+            outline[i].style.marginLeft=window.innerWidth*0.03+'px';
+        }
+    }
+    window_height_onchange();//首次加载
+    //窗口高度变化监听器
+    function window_height_listener(){
+        if(window.innerHeight!==window_height){
+            window_height=window.innerHeight;//更新此时窗口高度
+            flex.style.height=window.innerHeight+'px';//重绘flex的高度
+            slider.style.width=window.innerHeight*0.8+'px';//轴长度
+            slider.style.top=window.innerHeight*0.49+'px';//轴顶部间距
+            let slider_left_max=window.innerWidth-window.innerHeight*0.4;
+            let outline_left_max=(window.innerWidth*(1-0.86))*0.5;//更改第2位数值已改变轴体水平位置
+            slider.style.left=slider_left_max-outline_left_max+'px';//轴右侧边距
+        }
+        if(window.innerWidth!==window_width){
+            window_width=window.innerWidth;
+            if(window.innerWidth<=700){//当前窗口宽度最小时日志靠边
+                for(i=0;i<outline.length;i++){
+                    outline[i].style.marginLeft=4+'px';
+                }
+            }else {//重新赋值左边距
+                for(i=0;i<outline.length;i++) {
+                    outline[i].style.marginLeft=window.innerWidth*0.03+'px';
+                }
+            }
+        }
+    }
+    //开启脉冲监听器
+    setInterval('window_height_listener()',500);
+    //配置事件节点
+    function axis_node_set() {
+        let now=new Date();
+        let now_second=Math.floor(now.getTime()/1000);//当前时间的秒速
+        let second_to_value=now_second-initial_time;//时间跨度
+        for(i=0;i<diary_data.list.length;i++){
+            let tem_time=new Date(diary_data.list[i].time.year+'-'+diary_data.list[i].time.month+'-'+diary_data.list[i].time.day+'T'+diary_data.list[i].time.hours+':'+diary_data.list[i].time.minute);//获取list内的时间并转化为秒数
+            let tem_second=Math.floor(tem_time.getTime()/1000);//该事件的时间秒
+            let tem_length=tem_second-initial_time;//时间跨度
+            let tem_value=Math.floor((tem_length/second_to_value)*300);//300为时间轴最大长度
+            axis_top_config.push(tem_value);
+        }
+    }
+    axis_node_set();
+   //移动小球的函数
+    function move_pe(va){
+        for(let i=0;i<axis_top_config.length;i++){
+            if(va==axis_top_config[i]){
+                outline[i].className+=' hover';
+                flex.scrollTop=outline[i].offsetTop-2;
+                setTimeout(function () {outline[i].className='outline';},500);//高亮0.5秒
+                console.log(slider.value)
+            }
+        }
+        console.log(slider.value)
+    }
+    //某个日志被聚焦后小球移动至对应地点
+    function round_top_change(diary_element){
+        for(i=0;i<outline.length;i++){
+            if(diary_element==outline[i]){
+                slider.value=axis_top_config[i];
+            }
+        }
+    }
+    //setInterval('console.log(now_round_top)',100)
+</script>
+</body>
+</html>

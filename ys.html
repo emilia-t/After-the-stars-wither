@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <title>在星空枯萎之后</title>
+    <script>
+        function judge() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"
+            ];    //  判断是否是这几个系统
+            var isPC = true;
+            for (let i = 0; i < Agents.length; i++) {
+                if (userAgentInfo.indexOf(Agents[i]) > 0) {
+                    isPC = false;
+                    break;
+                }
+            }
+            return isPC;
+        }
+        var isPC = judge();
+        if(!isPC){
+            window.location.href = 'ys_pe.html' //跳转到手机端页面
+        }
+    </script>
+    <script src="js/vue.js"></script>
+    <style>
+        tr:hover{background:#0084ff;}
+        th{font-size:16px;font-weight:bold;}
+        td{font-size:16px;height:40px;}
+        th,td{border: solid 1px black;text-align:center;}
+        /**/
+        .in{position:fixed;top:30px;left:20px}
+        #night{color: white;background: black;position: fixed;top:120px;left:20px;border:0;}
+        .tx{width:40px;height:40px;padding: 0;border-radius:40px;margin-top: 3px }
+        .pcr{color: white;background: black;position: fixed;top:150px;left:20px;border:0;}
+        /**/
+        a{text-decoration:none}
+        a:link {color: white}
+        a:visited {color: white}
+        a:hover {color: white}
+        a:active {color: white}
+    </style>
+</head>
+<body>
+<div style="width: 100%;height: 26px;background: rgba(71,129,255,0.21);text-align: center">
+    <img src="https://www.easyicon.net/api/resizeApi.php?id=1233029&size=16" style="display: inline-block"/>
+    <p style="color: #4058ff;display: inline-block;margin: 1px;border: 0;padding: 0">：公主连结交流群已创建Q群号：<span style="color:#ff3f64;">862776617</span>
+    </p>
+</div>
+<div class="buttons">
+    <button onclick="night()" id="night">暗黑♂模式</button>
+    <button onclick="" id="pcr" class="pcr"><a href="bh3.html">崩坏三资料</a></button>
+</div>
+<div>
+    <p class="in">输入QQ号进行查找<br>完成后点击空白处<br>
+        <input type="text" onchange="find(this)" placeholder="下次查找时清空输入框" id="input_1"/>
+    </p>
+</div>
+<div id="show"><!--难道这就是你分手的借口~~--><!--获得成就:没事看看源代码--><!--本页面由临冉制作-->
+    <div align="center" class="data">
+        <table width="1006.17" border="0" cellpadding="0" cellspacing="0">
+            <tbody id="tbody">
+            <tr style="text-align:left">
+	  <span style="text-align:left">
+        <td colspan="2"><button onclick="reverse_order(14)">点我倒序</button></td>
+        <td  width="901.50" colspan="7">欢迎补充与指正&nbsp; <span style="color:red;">公会游戏ID与QQ对应表</span>&nbsp; 更新时间：20201007</td>
+      </span>
+            </tr>
+            <tr class="tr1">
+                <td>入群时间</td>
+                <td>序号</td>
+                <td>头像</td>
+                <td>QQ号</td>
+                <td>昵称</td>
+                <td>游戏id</td>
+                <td>游戏昵称</td>
+                <td>惯称或者别称</td>
+                <td>其他信息</td>
+            </tr>
+            <tr v-for="row in pcr_sheet_data_s" class="tr1" v-bind:id="row.qq_id">
+                <td>{{row.insert_time}}</td>
+                <td v-bind:id="row.serial_number - 1">{{row.serial_number}}</td>
+                <td><img alt="加载失败" class="tx" v-bind:src="'http://q.qlogo.cn/g?b=qq&nk='+row.qq_id+'&s=640&mType=friendlist'"/></td>
+                <td>{{row.qq_id}}</td>
+                <td>{{row.group_nickname}}</td>
+                <td>{{row.game_id}}</td>
+                <td>{{row.game_nickname}}</td>
+                <td>{{row.habit_name}}</td>
+                <td>{{row.remarks}}</td>
+            </tr>
+            <tr>
+                <td  colspan="9"><span style="color:red">请注意！资料仅限供参考！真实性自行斟酌</span></td>
+            </tr>
+            <tr>
+                <td width="60px"></td>
+                <td width="40px"></td>
+                <td width="70px"></td>
+                <td width="120px"></td>
+                <td width="100px"></td>
+                <td width="100px"></td>
+                <td width="100px"></td>
+                <td width="105px"></td>
+                <td width="105px"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    //创建vue
+    var pcr_sheet_data=[];//
+    var pcr_sheet=new Vue({
+        el:'#show',
+        data:{
+            pcr_sheet_data_s:undefined
+        }
+    });
+    //获取崩坏3数据
+    function get_bh3_sheet_data(){
+        let new_ajax=new XMLHttpRequest();
+        new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=ys',true);
+        new_ajax.send();
+        new_ajax.onreadystatechange=function(){
+            if(new_ajax.readyState===4 && new_ajax.status===200){
+                bh3_sheet_data=eval(new_ajax.responseText);
+                var sheet_obj=new Array();//最外层1
+                var row_length=bh3_sheet_data.length;
+                for(let i=0;i<row_length;i++){
+                    let col_length=bh3_sheet_data[i].length;
+                    sheet_obj[i]={};//中层2
+                    for(let x=0;x<col_length;x++){
+                        switch (x) {
+                            case 0:{
+                                sheet_obj[i].insert_time=bh3_sheet_data[i][x];break
+                            }
+                            case 1:{
+                                sheet_obj[i].serial_number=bh3_sheet_data[i][x];break
+                            }
+                            case 2:{
+                                sheet_obj[i].qq_id=bh3_sheet_data[i][x];break
+                            }
+                            case 3:{
+                                sheet_obj[i].group_nickname=bh3_sheet_data[i][x];break
+                            }
+                            case 4:{
+                                sheet_obj[i].game_id=bh3_sheet_data[i][x];break
+                            }
+                            case 5:{
+                                sheet_obj[i].game_nickname=bh3_sheet_data[i][x];break
+                            }
+                            case 6:{
+                                sheet_obj[i].habit_name=bh3_sheet_data[i][x];break
+                            }
+                            case 7:{
+                                sheet_obj[i].remarks=bh3_sheet_data[i][x];break
+                            }
+                            default:{break;}
+                        }
+                    }
+                }
+                pcr_sheet.pcr_sheet_data_s=sheet_obj;//刷新数据
+                //oder_card();
+                //setTimeout('oder_card()',10);//排布卡片,会导致vue视图失效，原因-一开始没考虑使用vue，所以采用获取原数据-整合排布-删除原始数据-重新写入已经排布号的数据
+                return true;
+            }
+        };
+    }
+    get_bh3_sheet_data();
+    /////
+    var x=1;
+    var oder=1;
+    function reverse_order(num) {
+        var i=num;
+        if(oder%2===0){
+            for(i;i!==-1;i--){
+                var tbody=document.getElementById("tbody");
+                var id=document.getElementById(i);
+                var qq=id.parentNode.id;
+                var tr=document.getElementById(qq);
+                var new_tr=document.createElement("tr");
+                new_tr.id=qq;
+                new_tr.innerHTML=tr.innerHTML;
+                tr.parentNode.removeChild(tr);
+                tbody.insertBefore(new_tr,tbody.childNodes[6]);
+            }
+            oder++;
+        }else{
+            for(x=0;x<=num;x++){
+                var tbody=document.getElementById("tbody");
+                var id=document.getElementById(x);
+                var qq=id.parentNode.id;
+                var tr=document.getElementById(qq);
+                var new_tr=document.createElement("tr");
+                new_tr.id=qq;
+                new_tr.innerHTML=tr.innerHTML;
+                tr.parentNode.removeChild(tr);
+                tbody.insertBefore(new_tr,tbody.childNodes[6]);
+            }
+            oder++;
+        }
+    }
+    function night(){
+        if(x%=2){
+            document.body.style="background:#3f3f3f;color:white";
+            document.getElementById("night").style.background="red";
+            document.getElementById("night").innerText="瞎眼♀模式";
+            x++;
+        }else{
+            document.body.style="background:white;color:block";
+            document.getElementById("night").style.background="black";
+            document.getElementById("night").innerText="暗黑♂模式";
+            x++;
+        }
+    }
+    function find(values){
+        let qq=values.value;
+        if(document.getElementById(qq)){
+            let text=document.getElementById(qq);
+            let data='';
+            for (x=0;x<text.children.length;x++){
+                data+=text.children[x].innerText+'\n';
+            }
+            alert(data);
+        }else{
+            alert("不存在")
+        }
+    }
+</script>
+</body>
+</html>

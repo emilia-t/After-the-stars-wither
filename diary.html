@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>群日志</title>
+    <script>
+        function judge() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"
+            ];    //  判断是否是这几个系统
+            var isPC = true;
+            for (let i = 0; i < Agents.length; i++) {
+                if (userAgentInfo.indexOf(Agents[i]) > 0) {
+                    isPC = false;
+                    break;
+                }
+            }
+            return isPC;
+        }
+        var isPC = judge();
+        if(!isPC){
+            window.location.href = 'diary_pe.html' //跳转到手机端页面
+        }
+    </script>
+    <script src="js/vue.js"></script>
+    <link rel="shortcut icon" href="favicon.ico">
+    <style>
+        /*pc版*/
+        *{margin: 0}
+        ::-webkit-scrollbar-track-piece {-webkit-border-radius:0}
+        ::-webkit-scrollbar {width:10px;height:5px}
+        ::-webkit-scrollbar-thumb{outline-offset:2px;border:2px solid #6c82ff;}
+        ::-moz-selection {background: #5f5f5f;color: #ffffff;font-weight: 900;font-size: 32px;}
+        ::selection {background: #5f5f5f;color: #ffffff;font-weight: 900;font-size: 32px;}
+        body,html{overflow-x:hidden;overflow-y: hidden}
+        /*body::-webkit-scrollbar{display:none;}/*隐藏滚动条*/
+        body{height: 100%}
+        img,#show_frame,#message{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;}
+        /*body::-webkit-scrollbar{width: 20px}*/
+        #flex{width:100%;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            scrollbar-face-color: #6c82ff;
+            scrollbar-base-color: #6c82ff;
+            scrollbar-shadow-color: #6c82ff;
+            scrollbar-highlight-color: #6c82ff;
+            scrollbar-track-color: #6c82ff;
+            scrollbar-arrow-color: #6c82ff;
+            min-width: 925px;
+        }
+        /*显示层*/
+        .text{text-indent:2em;line-height: 30px}
+        .outline{width:50%;position: relative;border:2px solid #ffb1b8;border-radius: 10px;margin-top: 10px;box-shadow:10px 10px 10px #faecf3;background: #f9f9ff;transition:0.3s;font-size: 20px}
+        .outline:hover{margin-top: 6px;width: 50.4%;margin-bottom:4px;border:2px solid #ff9095;box-shadow:13px 13px 20px #fab5ba;background: #ffffff}
+        .hover{margin-top: 6px;width: 50.4%;margin-bottom:4px;border:2px solid #ff9095;box-shadow:13px 13px 20px #fab5ba;background: #ffffff}
+        .img_div{width: inherit;text-align: center;}
+        .img{max-height: 400px;border-radius: 10px;max-width: 90%}
+        .date{text-align: center;line-height: 45px}
+        /*预览层*/
+        #show_frame{width: 16%;height: 16%;background: rgba(255, 177, 184, 1);position: fixed;z-index: 40;top:50px;right: 80px;border-radius: 6px;font-size: 14px;overflow: hidden;transition: 0.4s;opacity:0;display: none}
+        #triangle{border-top: 20px solid rgba(255, 177, 184, 1);
+            border-right: 20px solid rgba(255, 177, 184, 1);
+            border-bottom: 20px solid rgba(0, 0, 0, 0);
+            border-left: 20px solid rgba(0, 0, 0, 0);position: fixed;top:90px;right: 61px;
+            transform:rotate(45deg);
+            transition: 0.4s;
+        }
+        /*时间轴*/
+        #time_axis{height:100%;position:fixed;right:30px;z-index:10;}
+        #axis{position: fixed;right:30px;}
+        #round{position: fixed;right:19px;height:24px;width: 24px;transition: 0.4s}
+        /*动画*/
+        @keyframes message_hide {
+            0%{
+                top:-60px;
+            }
+            25%{
+                top:0px;
+            }
+            75%{
+                top:0px;
+            }
+            100%{
+                top:-90px;
+            }
+        }
+        /*消息层*/
+        #message{position: fixed;width: 100%;height:44px;z-index: 999;animation: message_hide  2.5s forwards;
+            -moz-animation: message_hide  2.5s forwards;
+            -webkit-animation: message_hide 2.5s forwards;
+            -o-animation: message_hide  2.5s forwards;
+            background: #ffb1b8;
+            line-height: 42px;
+        }
+        #mes_title{width: 100%;height: 44px;text-align: center;}
+    </style>
+</head>
+<body>
+<!--资源层-->
+<div style="display: none">
+    <img src="img/diary/round.png">
+</div>
+<!--预览层-->
+<div id="show_frame" ><!--显示相应的事件的框架-->
+    <div id="frame_time_type"><!--时间及类型-->
+    </div>
+    <div id="frame_content"><!--部分内容前20个字-->
+    </div>
+    <div id="triangle"><!--小三角-->
+    </div>
+</div>
+<!--时间轴层-->
+<div id="time_axis" >
+    <img src="img/diary/axis.png" id="axis" draggable="false">
+    <img class="round" id="round" src="img/diary/round_2.png"  draggable="true" ondrag="move()" ondragend="move_end()">
+</div>
+<!--消息层-->
+<div id="message">
+    <div id="mes_title"><!--标题-->
+        <h2>欢迎参观「在星空枯萎之后」日志 <b>|</b> Welcome to ATSW team daily !</h2>
+    </div>
+</div>
+<!--视图层-->
+<div id="flex" draggable="false"><!--flex-->
+    <div class="outline" id="outline" v-for="(diary,i) in list" onmouseover="round_top_change(this)"><!--单个日志-->
+        <div class="date"><!--时间及类型-->
+            <b>{{diary.time.year}}年{{diary.time.month}}月{{diary.time.day}}日{{diary.time.hours}}时{{diary.time.minute}}分({{diary.type}})</b>
+        </div>
+        <div class="content" v-for="(diary_content,c) in diary.content"><!--内容---->
+            <div class="text" v-if="create_text(diary_content[1])">
+                <p v-html="diary_content[0]"></p>
+            </div>
+            <div class="img_div" v-if="create_img(diary_content[1])">
+                <img draggable="false" class="img" :src="diary_content[0]">
+            </div>
+        </div>
+    </div>
+</div>
+<!--数据层-->
+<script src='js/diary_data.js'></script>
+<script>
+    /*控制层*/
+    let diary=new Vue({
+        el:'#flex',
+        data:diary_data,
+        methods:{
+            /*创建一个text的节点*/
+            create_text:function(type){
+                if(type==='text'){
+                    return true
+                }
+            },
+            /*创建一个img的节点*/
+            create_img:function(type){
+                if(type==='img'){
+                    return true
+                }
+            }
+        }
+    });
+    /*
+    测试区域
+    */
+    /*时间轴*/
+    var all_interval=new Array();//全局的脉冲器
+    var initial_time=1586055240;//初始时间
+    var axis_top_config=new Array();//时间轴节点数据
+    var now_round_top_value=0;//当前小球的高度
+    var now_axis_height=0;//当前时间轴的高度
+    var now_round_min_top_value=0;//小球在最顶部的高度
+    var now_px_to_hours=0;//当前时间戳每像素对应的秒数
+    var round=document.getElementById('round');
+    var window_height=window.innerHeight;
+    var window_width=window.innerWidth;
+    var axis=document.getElementById('axis');
+    var flex=document.getElementById('flex');
+    var show_frame=document.getElementById('show_frame');
+    var triangle=document.getElementById('triangle');
+    var frame_time_type=document.getElementById('frame_time_type');
+    var frame_content=document.getElementById('frame_content');
+    var outline=document.getElementsByClassName('outline');
+    var flex_scroll_max=flex.scrollHeight-flex.offsetHeight;//flex的scroll最大值
+    ///设置轴的高低样式
+    function set_axis_style(){
+        axis.setAttribute('height',window.innerHeight*0.85+'px');
+        axis.setAttribute('width',3+'px');
+        axis.style.top=window.innerHeight*0.06+'px';
+        round.style.top=window.innerHeight*0.06+'px';
+    }
+    set_axis_style();
+    //修改半透明的图片
+    round.addEventListener("dragstart", function() {
+        var img = document.createElement("img");
+        img.src = "data:image/png;base64,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";
+        window.event.dataTransfer.setDragImage(img, 0, 0);
+    }, false);
+    //时间轴长度等于窗口的0.85倍
+    //基于数据建立由时间和事件标题(取内容前10个字)组成事件日志模型
+    function set_axis_node() {
+        var current_time=new Date();//当前时间
+        var offset_px=parseInt(round.style.top);//小球的初始top值
+        var axis_px_length=parseInt(window.innerHeight*0.85)+16;//时间轴的像素长度
+        var axis_time_length=Math.floor(current_time.getTime()/1000)-initial_time;//从初始时间到现在的秒数
+        var px_to_hours=Math.floor(axis_time_length/axis_px_length);//每像素等于多少秒
+        now_px_to_hours=px_to_hours;//记录全局
+        axis_top_config.length=0;//初始化节点top配置
+        for(i=0;i<diary_data.list.length;i++){
+            var tem_time=new Date(diary_data.list[i].time.year+'-'+diary_data.list[i].time.month+'-'+diary_data.list[i].time.day+'T'+diary_data.list[i].time.hours+':'+diary_data.list[i].time.minute);//获取list内的时间并转化为秒数
+            var tem_px=Math.floor(((tem_time.getTime()/1000)-initial_time)/px_to_hours)+offset_px;
+            axis_top_config.push(tem_px);
+        }
+    }
+    //当浏览器高度发生变化时重新设置高度，显示的高度，时间轴重绘
+    function window_height_onchange(){
+        now_round_top_value=parseInt(round.style.top);//小球高度记录值初始化
+        now_round_min_top_value=parseInt(axis.style.top);//小球的最低高度初始化
+        now_axis_height=parseInt(axis.height);//时间轴的高度初始化
+        flex.style.height=window.innerHeight+'px';//设置flex的初始高度
+        for(i=0;i<outline.length;i++){//设置每个日志的初始左边距
+            outline[i].style.marginLeft=window.innerWidth*0.25+'px';
+        }
+        set_axis_style();//重绘时间轴样式
+        set_axis_node();//重绘时间轴时间节点位置
+    }
+    window_height_onchange();//首次加载
+    //窗口高度变化监听器
+    function window_height_listener(){
+        if(window.innerHeight!==window_height){
+            window_height=window.innerHeight;//更新此时窗口高度
+            flex.style.height=window.innerHeight+'px';//重绘flex的高度
+            set_axis_style();//重绘时间轴样式
+            set_axis_node();//重绘时间轴时间节点位置
+            let axis_height=parseInt(axis.height);//改变浏览器的高度之后时间轴的长度
+            now_round_min_top_value=parseInt(axis.style.top);//更新最低高度
+            round.style.top=((axis_height*now_round_top_value)/now_axis_height)+'px';
+        }
+        if(window.innerWidth!==window_width){
+            window_width=window.innerWidth;
+            if(window.innerWidth<=700){//当前窗口宽度最小时日志靠边
+                for(i=0;i<outline.length;i++){
+                    outline[i].style.marginLeft=4+'px';
+                }
+            }else {//重新赋值左边距
+                for(i=0;i<outline.length;i++) {
+                    outline[i].style.marginLeft=window.innerWidth*0.25+'px';
+                }
+            }
+        }
+    }
+    //开启脉冲监听器
+    setInterval('window_height_listener()',500);
+    //移动小球的函数
+    function move(){
+        if(window.event.clientY===0){return}//若鼠标再顶部，不移动
+        if(window.event.clientY<=(window.innerHeight*0.06)-2 || window.event.clientY>=(window.innerHeight *0.9)){return}//若鼠标移出时间轴外，不移动
+        round.style.transition='0s';//小球立即随鼠标移动而移动
+        round.src='img/diary/round.png';//修改图片
+        round.style.top=(window.event.clientY)+'px';//修改小球的高度
+        now_round_top_value=window.event.clientY;
+        for(let z=0;z<axis_top_config.length;z++){//查找节点高度信息，备用作匹配
+            if(parseInt(window.event.clientY)===axis_top_config[z]){ //如果移动到了节点处则做动作
+                frame_content.innerText=diary_data.list[z].content[0][0].substring(0,40)+'……';//显示部分信息
+                let time_and_type=frame_time_type.innerText=diary_data.list[z].time.year+'年'+diary_data.list[z].time.month+'月'+diary_data.list[z].time.day+'日'+diary_data.list[z].time.hours+'时'+diary_data.list[z].time.minute+'分('+diary_data.list[z].type+')';//显示时间及类型信息
+                for(let k=0;k<outline.length;k++){
+                    if(time_and_type===outline[k].firstElementChild.innerText){
+                        flex.scrollTop=outline[k].offsetTop-2;
+                        outline[k].className+=' hover';
+                        setTimeout(function () {outline[k].className='outline';},500);//高亮0.5秒
+                        triangle.style.top=window.event.clientY-5+'px';
+                        show_frame.style.top=window.event.clientY-45+'px';
+                        show_frame.style.display='block';
+                        show_frame.style.opacity='1';
+                        setTimeout('show_frame.style.opacity="0"',10000);
+                        setTimeout('show_frame.style.display="none"',10500);
+                    }
+                }
+            }
+        }
+    }
+    //停止移动小球
+    function move_end(){
+        round.src='img/diary/round_2.png';//修改图片
+    }
+    //flex滚动时小球随着滚动
+    function round_top_change(diary_element) {
+        round.style.transition='0.4s';
+        for(i=0;i<outline.length;i++){
+            if(diary_element==outline[i]){
+                round.style.top=axis_top_config[i]+'px';
+            }
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <title>在星空枯萎之后</title>
+  <script>
+    function judge() {
+      var userAgentInfo = navigator.userAgent;
+      var Agents = ["Android", "iPhone",
+        "SymbianOS", "Windows Phone",
+        "iPad", "iPod"
+      ];    //  判断是否是这几个系统
+      var isPC = true;
+      for (let i = 0; i < Agents.length; i++) {
+        if (userAgentInfo.indexOf(Agents[i]) > 0) {
+          isPC = false;
+          break;
+        }
+      }
+      return isPC;
+    }
+    var isPC = judge();
+    if(isPC){
+      window.location.href = 'pcr.html' //跳转到手机端页面
+    }
+  </script>
+  <script src="js/vue.js"></script>
+  <style>
+    /**/
+    html body{padding: 0;margin: 0}
+    /*table{table-layout:fixed;}*/
+    table{border-spacing: 0px;table-layout:fixed;border-collapse: collapse;line-height: 20px;letter-spacing: 2px;margin:5px 0 2px 40px;float: left}
+    th{font-size:16px;font-weight:bold;}
+    td{font-size:16px;height:30px;}
+    th,td{border: solid 1px black;text-align:center;}
+    /**/
+    .in{position:fixed;top:30px;left:20px}
+    #night{color: white;background: black;position: fixed;top:120px;left:20px;border:0;}
+    .tx{width:40px;height:40px;padding: 0;border-radius:40px;margin-top: 3px }
+    .pcr{color: white;background: black;position: fixed;top:150px;left:20px;border:0;}
+    /**/
+    a{text-decoration:none}
+    a:link {color: white}
+    a:visited {color: white}
+    a:hover {color: white}
+    a:active {color: white}
+    /*table_td*/
+    .time_li{width: 112px}
+    .left_title{position: fixed;left: 0;width: 40px;background: white;margin:0}
+    .left_title_1{height: 100px}
+    .left_title_2{height: 100px}
+    .left_title_3{height: 100px}
+    .left_title_4{height: 100px}
+    .left_title_5{height: 100px}
+    .left_title_6{height: 100px}
+    .left_title_7{height: 60px}
+    .left_title_8{height: 40px}
+    /*menu*/
+    #menu{width: 100%;height: 80px;position: fixed;z-index: 999}
+    #menu_text{text-align: center;background: white}
+    input, button {border: none;outline: none;}
+    .tl-price-input{
+      width: 100%;
+      border: 1px solid #ccc;
+      padding: 7px 0;
+      background: #F4F4F7;
+      border-radius: 3px;
+      padding-left:5px;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+    .tl-price-input:focus{
+      border-color: #66afe9;
+      outline: 0;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+    }
+    #menu_content{display: none;background: rgba(255, 255, 255, 0.51);text-align: center;width: 100%;height: 80px;position: fixed;z-index: 999}
+    .ant-btn {height: 30px;line-height: 1.499;position: relative;display: inline-block;font-weight: 400;white-space: nowrap;text-align: center;background-image: none;border: 1px solid transparent;-webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.015);box-shadow: 0 2px 0 rgba(0,0,0,0.015);cursor: pointer;-webkit-transition: all .3s cubic-bezier(.645, .045, .355, 1);transition: all .3s cubic-bezier(.645, .045, .355, 1);-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;-ms-touch-action: manipulation;touch-action: manipulation;padding: 0 15px;font-size: 14px;border-radius: 4px;color: rgba(0,0,0,0.65);background-color: #fff;border-color: #d9d9d9;}
+    .ant-btn-red {color: #fff;background-color: #FF5A44;border-color: #FF5A44;text-shadow: 0 -1px 0 rgba(0,0,0,0.12);-webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.045);box-shadow: 0 2px 0 rgba(0,0,0,0.045);}
+    #close_menu{width: 30px;height: 30px;top:10px;right: 10px;position: fixed}
+    #go_home{width: 32px;height: 32px;top:44px;right: 9px;position: fixed}
+  </style>
+</head>
+<body>
+<div id="menu">
+  <div id="menu_text" >
+    点击<span style="color: red">顶部</span>任意位置唤出<span style="color: red">菜单</span> 4 秒
+  </div>
+</div>
+<div style="width: 100%;height: 26px;background:  rgba(71,129,255,0.21);text-align: center;position: fixed;top: 0">
+  <img src="https://www.easyicon.net/api/resizeApi.php?id=1233029&amp;size=16" style="display: inline-block">
+  <p style="color: #4058ff;display: inline-block;margin: 1px;border: 0;padding: 0">：.. .-.. --- ...- . -.-- --- ..-
+  </p>
+</div>
+<div id="menu_content">
+  <div style="width: 144px;float: left;position: fixed;top:8px;left: 2px"><input id="qq_number" class="tl-price-input" type="text" placeholder="请输入QQ号后点击查找"></div>
+  <div style="width: 60px;float: left;position: fixed;top:8px;left: 156px"><button class="ant-btn ant-btn-red" onclick="find(document.getElementById('qq_number').value)">查找</button></div>
+  <div style="width: 100px;float: left;position: fixed;top:42px;left: 2px"><a id="oder_a"><button onclick="get_bh3_sheet_data('time_asc')" id="oder_button" class="ant-btn ant-btn-red">按时间升序</button></a></div>
+  <div style="width: 100px;float: left;position: fixed;top:42px;left: 114px"><a><button onclick="get_bh3_sheet_data()" class="ant-btn ant-btn-red">按默认排序</button></a></div>
+  <a href="menu.php"><img id="go_home" src="img/bh3_sheet/go_home.png"></a>
+  <img id="close_menu" src="img/bh3_sheet/close_button.png">
+</div>
+<script>
+  var menu_text=document.getElementById("menu_text");
+  window.setTimeout("menu_text.style.display='none'",4000);
+  window.setTimeout("menu_text.innerHTML='点击<span style=\"color: red\">顶部</span>任意位置唤出<span style=\"color: red\">菜单</span> 3 秒'",1000);
+  window.setTimeout("menu_text.innerHTML='点击<span style=\"color: red\">顶部</span>任意位置唤出<span style=\"color: red\">菜单</span> 2 秒'",2000);
+  window.setTimeout("menu_text.innerHTML='点击<span style=\"color: red\">顶部</span>任意位置唤出<span style=\"color: red\">菜单</span> 1 秒'",3000);
+  var menu=document.getElementById("menu");
+  var menu_content=document.getElementById("menu_content");
+  menu.addEventListener('click',function () {
+    if(menu_content.style.display==="none"){
+      menu_content.style.display="block"
+    }else{
+      menu_content.style.display="none"
+    }
+  });
+  var close_menu=document.getElementById("close_menu");
+  close_menu.addEventListener('click',function () {
+    menu_content.style.display="none"
+  });
+</script>
+<table style="margin-top: 30px" id="sheet_1" align="center">
+  <tbody>
+  <tr>
+    <td class="left_title left_title_1">
+      头像
+    </td>
+    <td v-for="row in pcr_sheet_data_s" v-bind:id="row.qq_id"><img alt="加载失败" class="tx" v-bind:src="'http://q.qlogo.cn/g?b=qq&amp;nk='+row.qq_id+'&amp;s=640&amp;mType=friendlist'"></td></tr>
+  <tr>
+    <td class="left_title left_title_1">
+      序号
+    </td>
+    <td v-for="row in pcr_sheet_data_s" v-bind:id="row.serial_number">{{row.serial_number}}</td></tr>
+  <tr id="insert_time">
+    <td class="left_title left_title_2">
+      入时群间
+    </td>
+    <td v-for="row in pcr_sheet_data_s"><div class="time_li">{{row.insert_time}}</div></td></tr>
+  <tr>
+    <td class="left_title left_title_3">
+      QQ
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.qq_id}}</td></tr>
+  <tr>
+    <td class="left_title left_title_4">
+      群内昵称
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.group_nickname}}</td></tr>
+  <tr>
+    <td class="left_title left_title_5">
+      UID
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.game_id}}</td></tr>
+  <tr>
+    <td class="left_title left_title_6">
+      游戏昵称
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.game_nickname}}</td></tr>
+  <tr>
+    <td class="left_title left_title_7">
+      惯称
+    </td>
+    <td  v-for="row in pcr_sheet_data_s">{{row.habit_name}}</td></tr>
+  <tr>
+    <td class="left_title left_title_8">
+      备注
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.remarks}}</td></tr>
+  </tbody>
+</table>
+<table id="sheet_2">
+  <tbody>
+  <tr>
+    <td class="left_title left_title_1">
+      头像
+    </td>
+    <td v-for="row in pcr_sheet_data_s">
+      <img alt="加载失败" class="tx" v-bind:src="'http://q.qlogo.cn/g?b=qq&amp;nk='+row.qq_id+'&amp;s=640&amp;mType=friendlist'">
+    </td>
+  </tr>
+  <tr>
+    <td class="left_title left_title_1">
+      序号
+    </td>
+    <td v-for="row in pcr_sheet_data_s" v-bind:id="row.serial_number">{{row.serial_number}}</td></tr>
+  <tr id="">
+    <td class="left_title left_title_2">
+      入时群间
+    </td>
+    <td v-for="row in pcr_sheet_data_s"><div class="time_li">{{row.insert_time}}</div></td></tr>
+  <tr>
+    <td class="left_title left_title_3">
+      QQ
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.qq_id}}</td></tr>
+  <tr>
+    <td class="left_title left_title_4">
+      群内昵称
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.group_nickname}}</td></tr>
+  <tr>
+    <td class="left_title left_title_5">
+      UID
+    </td>
+    <td  v-for="row in pcr_sheet_data_s">{{row.game_id}}</td></tr>
+  <tr>
+    <td class="left_title left_title_6">
+      游戏昵称
+    </td>
+    <td  v-for="row in pcr_sheet_data_s">{{row.game_nickname}}</td></tr>
+  <tr>
+    <td class="left_title left_title_7">
+      惯称
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.habit_name}}</td></tr>
+  <tr>
+    <td class="left_title left_title_8">
+      备注
+    </td>
+    <td v-for="row in pcr_sheet_data_s">{{row.remarks}}</td></tr>
+  </tbody>
+</table>
+<script>
+  //创建vue
+  var pcr_sheet_data=[];
+  var pcr_sheet=new Vue({
+    el:'#sheet_1',
+    data:{
+      pcr_sheet_data_s:undefined
+    }
+  });
+  var pcr_sheet_2=new Vue({
+    el:'#sheet_2',
+    data:{
+      pcr_sheet_data_s:undefined
+    }
+  });
+  //获取数据
+  function get_bh3_sheet_data(oder_type){
+    let new_ajax=new XMLHttpRequest();
+    //构造url
+    let url;
+    switch (oder_type) {
+      case 'time_asc':{
+        url='http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&oder_by=time_asc';document.getElementById('oder_button').innerText='按时间降序';document.getElementById('oder_button').setAttribute('onclick','get_bh3_sheet_data("time_des")');break;
+      }
+      case 'time_des':{
+        url='http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&oder_by=time_des';document.getElementById('oder_button').innerText='按时间升序';document.getElementById('oder_button').setAttribute('onclick','get_bh3_sheet_data("time_asc")');break;
+      }default:{
+        url='http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr';break;
+      }
+    }
+    new_ajax.open('GET',url,true);
+    new_ajax.send();
+    new_ajax.onreadystatechange=function(){
+      if(new_ajax.readyState===4 && new_ajax.status===200){
+        pcr_sheet_data=eval(new_ajax.responseText);
+        var sheet_obj=new Array();//最外层1
+        var sheet_obj_2=new Array();//最外层1
+        var row_length=pcr_sheet_data.length;
+        for(let i=0;i<Math.floor(row_length/2);i++){
+          let col_length=pcr_sheet_data[i].length;
+          sheet_obj[i]={};//中层2
+          for(let x=0;x<col_length;x++){
+            switch (x) {
+              case 0:{
+                sheet_obj[i].insert_time=pcr_sheet_data[i][x];break
+              }
+              case 1:{
+                sheet_obj[i].serial_number=pcr_sheet_data[i][x];break
+              }
+              case 2:{
+                sheet_obj[i].qq_id=pcr_sheet_data[i][x];break
+              }
+              case 3:{
+                sheet_obj[i].group_nickname=pcr_sheet_data[i][x];break
+              }
+              case 4:{
+                sheet_obj[i].game_id=pcr_sheet_data[i][x];break
+              }
+              case 5:{
+                sheet_obj[i].game_nickname=pcr_sheet_data[i][x];break
+              }
+              case 6:{
+                sheet_obj[i].habit_name=pcr_sheet_data[i][x];break
+              }
+              case 7:{
+                sheet_obj[i].remarks=pcr_sheet_data[i][x];break
+              }
+              default:{break;}
+            }
+          }
+        }
+
+        let half_le=row_length-Math.ceil((row_length)/2);//总长减去第一行最大长
+        //console.log(half_le);
+        for(let i=half_le;i<row_length;i++){
+          let col_length=pcr_sheet_data[i].length;
+          sheet_obj_2[i-half_le]={};//中层2
+          for(let x=0;x<col_length;x++){
+            switch (x) {
+              case 0:{
+                sheet_obj_2[i-half_le].insert_time=pcr_sheet_data[i][x];break
+              }
+              case 1:{
+                sheet_obj_2[i-half_le].serial_number=pcr_sheet_data[i][x];break
+              }
+              case 2:{
+                sheet_obj_2[i-half_le].qq_id=pcr_sheet_data[i][x];break
+              }
+              case 3:{
+                sheet_obj_2[i-half_le].group_nickname=pcr_sheet_data[i][x];break
+              }
+              case 4:{
+                sheet_obj_2[i-half_le].game_id=pcr_sheet_data[i][x];break
+              }
+              case 5:{
+                sheet_obj_2[i-half_le].game_nickname=pcr_sheet_data[i][x];break
+              }
+              case 6:{
+                sheet_obj_2[i-half_le].habit_name=pcr_sheet_data[i][x];break
+              }
+              case 7:{
+                sheet_obj_2[i-half_le].remarks=pcr_sheet_data[i][x];break
+              }
+              default:{break;}
+            }
+          }
+        }
+        pcr_sheet.pcr_sheet_data_s=sheet_obj;//刷新数据
+        pcr_sheet_2.pcr_sheet_data_s=sheet_obj_2;//刷新数据
+        return true;
+      }
+    };
+  }
+  get_bh3_sheet_data();
+</script>
+<script>
+  var x=1;
+  function night(){
+    if(x%=2){
+      document.body.style="background:#3f3f3f;color:white";
+      document.getElementById("night").style.background="red";
+      document.getElementById("night").innerText="瞎眼♀模式";
+      x++;
+    }else{
+      document.body.style="background:white;color:block";
+      document.getElementById("night").style.background="black";
+      document.getElementById("night").innerText="暗黑♂模式";
+      x++;
+    }
+  }
+  function find(values){
+    if(document.getElementById(values)){
+      let node=document.getElementById(values);
+      let num=node.cellIndex;
+      let table=node.parentElement.parentElement;
+      alert("序号："+table.children[1].children[num].innerText+"\n入群时间："+table.children[2].children[num].innerText+"QQ："+table.children[3].children[num].innerText+"\n群内昵称："+table.children[4].children[num].innerText+"\nUID："+table.children[5].children[num].innerText+"\n游戏昵称："+table.children[6].children[num].innerText+"\n惯称："+table.children[7].children[num].innerText+"\n备注："+table.children[8].children[num].innerText);
+      console.log();
+    }else{
+      alert("无法找到："+values)
+    }
+  }
+</script>
+</body>
+</html>

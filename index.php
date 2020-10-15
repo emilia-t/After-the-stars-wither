@@ -1,33 +1,32 @@
 <!doctype html>
-<script>
-    var mobile_bs = {
-        versions: function() {
-            var u = navigator.userAgent;
-            return {
-                trident: u.indexOf('Trident') > -1, //IE内核
-                presto: u.indexOf('Presto') > -1,  //opera内核
-                webKit: u.indexOf('AppleWebKit') > -1,  //苹果、谷歌内核
-                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,  //火狐内核
-                mobile: !! u.match(/AppleWebKit.*Mobile.*/) || !! u.match(/AppleWebKit/) && u.indexOf('QIHU') && u.indexOf('QIHU') > -1 && u.indexOf('Chrome') < 0,  //是否为移动终端
-                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),  //ios终端
-                android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,  //android终端或者uc浏览器
-                iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1,   //是否为iPhone或者QQHD浏览器
-                iPad: u.indexOf('iPad') > -1,     //是否iPad
-                webApp: u.indexOf('Safari') == -1   //是否web应该程序，没有头部与底部
-            }
-        } ()
-    };
-    if (mobile_bs.versions.mobile) {
-        window.location.href = "index_pe.php";
-    }
-</script>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="favicon2.ico"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
     <title>星空枯萎漫图站</title>
+	<script>
+        function judge() {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"
+            ];    //  判断是否是这几个系统
+            var isPC = true;
+            for (let i = 0; i < Agents.length; i++) {
+                if (userAgentInfo.indexOf(Agents[i]) > 0) {
+                    isPC = false;
+                    break;
+                }
+            }
+            return isPC;
+        }
+        var isPC = judge();
+        if(!isPC){
+            window.location.href = 'index_pe.php' //跳转到手机端页面
+        }
+    </script>
     <style>
         #show{width:80%;position: absolute;left: 11%;margin: 0;top:40px}
         #refresh{background: rgba(164, 221, 255, 0.71);position: fixed;bottom: 0;z-index: 999;width: 100%;height: 28px;text-align: center}
@@ -105,7 +104,7 @@
             for (i=0;i<4;i++){
                 if(new_list[0]===list_height['list'+i][0]){last_list_top=list_height['list'+i][0]+'px';last_list_left=list_width*i+'px';last_list_name=i}
             }
-            var picture_number=randomNum(1,5895);
+            var picture_number=randomNum(1,6200);//5895
             var show=document.getElementById('show');
             var new_div=document.createElement('div');
             var img_url='thumbnail/'+picture_number+'.jpg';
@@ -142,7 +141,7 @@
         function add_picture() {//添加8张图片
             var list_width=(window.screen.width)*0.192+10;
             for(i=0;i<4;i++){
-                var picture_number=randomNum(1,5895);
+                var picture_number=randomNum(1,6200);
                 var show=document.getElementById('show');
                 var new_div=document.createElement('div');
                 var img_url='thumbnail/'+picture_number+'.jpg';

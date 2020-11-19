@@ -31,7 +31,7 @@
     </script>
     <script src="js/vue.js"></script>
 	<script src="js/config_1.js"></script>
-    <script src="js/diary_data_v_1.js"></script>
+    <script src="js/diary_data_v_2.js"></script>
     <style>
         /*PE*/
         a:link{text-decoration: none;color: #ff979b}

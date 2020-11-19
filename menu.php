@@ -127,6 +127,12 @@
                 <p class="menu_p">关于</p>
             </a>
         </div>
+		<div class="card">
+            <a href="bh3_source.php"  target="_self">
+                <img alt="加载失败" class="menu_img" src="img/old_ver.png">
+                <p class="menu_p">崩坏三</p>
+            </a>
+        </div>
     </div>
     <!--资讯层-->
     <div id="news_layer">

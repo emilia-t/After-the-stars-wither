@@ -45,6 +45,8 @@
         #search_img{width: 80%;z-index: 1000;border-radius: 20px;overflow: hidden;object-fit: cover;margin-top: 48px}
         #show_search{width: 100%;display: none;z-index: 1000;position:fixed;left:11%}
         #placeholder{font-size: 10px;margin-top: 10px}
+        /*返回按钮*/
+        #go_home{width: 35px;height: 35px;top:40px;right: 10px;position: fixed}
     </style>
     <script>
         var list_height=new Array();//列高数据
@@ -222,6 +224,8 @@
 <img src="img/like.png" style="display: none">
 <div id="show">
 </div>
+<!--返回按钮-->
+<a href="menu.php"><img alt="主页" id="go_home" src="img/bh3_sheet/go_home.png"></a>
 <div id="menu">
         <pre id="placeholder">
   提

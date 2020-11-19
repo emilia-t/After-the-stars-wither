@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="description" content="ATSW在星空枯萎之后，是一个查询ATSW成员资料信息的官方网站，任何游戏中，若您看到这个标志，也就意味着您可以在此站查询该玩家的资料。">
+	<meta name="keywords" content="ATSW,atsw,临冉,在星空枯萎之后,玩家资料收集,qq查询">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="favicon.ico">
     <title>在星空枯萎之后-大厅</title>
@@ -28,7 +30,8 @@
         }
     </script>
     <script src="js/vue.js"></script>
-    <script src="js/diary_data.js"></script>
+	<script src="js/config_1.js"></script>
+    <script src="js/diary_data_v_2.js"></script>
     <style>
         /*PE*/
         a:link{text-decoration: none;color: #ff979b}
@@ -84,33 +87,14 @@
            onblur="this.style.border='#FFC6D0 solid';document.getElementById('blur').style.filter='blur(6)';document.getElementById('blur').style.webkitFilter='blur(6px)'">
     <img alt="搜索" style="width: 36px;height:36px;background-repeat:no-repeat;" src="img/sousuo.png" onclick="find_qq(document.getElementById('input_text').value)">
 </div>
-<!--搜索层返回结果层-->
-<style>
-    #search_return{}
-</style>
-<div id="search_return">
-    <div>
-    </div>
     <!--右侧悬浮按钮层-->
     <img src="http://q.qlogo.cn/g?b=qq&nk=1077365277&s=640&mType=friendlist" id="img_float"/>
     <!--菜单层-->
     <div class="menu">
         <div class="card">
-            <a href="index.php" target="_self">
-                <img alt="加载失败" id="img1" class="menu_img" src="">
-                <p class="menu_p">看涩兔</p>
-            </a>
-        </div>
-        <div class="card">
             <a href="bh3.html" target="_self">
                 <img alt="加载失败" id="img2" class="menu_img" src="">
                 <p class="menu_p">崩坏三</p>
-            </a>
-        </div>
-        <div class="card">
-            <a href="pcr.html" target="_self">
-                <img alt="加载失败" id="img3" class="menu_img" src="img/sheet.png">
-                <p class="menu_p">PCR</p>
             </a>
         </div>
         <div class="card">
@@ -120,15 +104,27 @@
             </a>
         </div>
         <div class="card">
+            <a href="pcr.html" target="_self">
+                <img alt="加载失败" id="img3" class="menu_img" src="img/sheet.png">
+                <p class="menu_p">PCR</p>
+            </a>
+        </div>
+        <div class="card">
+            <a href="index.php" target="_self">
+                <img alt="加载失败" id="img1" class="menu_img" src="">
+                <p class="menu_p">看涩兔</p>
+            </a>
+        </div>
+        <div class="card">
             <a href="diary.html"  target="_self">
-                <img alt="加载失败" class="menu_img" src="img/sheet.png">
+                <img alt="加载失败" class="menu_img" src="img/dairy.png">
                 <p class="menu_p">日志</p>
             </a>
         </div>
         <div class="card">
-            <a href="bh3_source.php" target="_self">
-                <img alt="加载失败" class="menu_img" src="img/old_ver.png">
-                <p class="menu_p">崩坏三</p>
+            <a href="about.html"  target="_self">
+                <img alt="加载失败" class="menu_img" src="img/about.png">
+                <p class="menu_p">关于</p>
             </a>
         </div>
     </div>
@@ -247,10 +243,11 @@
         }
         //查找QQ
         /*控制层-查找*/
-        function find_qq(qq) {
+        function find_qq(qq,type) {
+            type=type || 'qq';
             let is_exist=false;
             let new_ajax=new XMLHttpRequest();
-            new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3&search_qq='+qq,true);
+            new_ajax.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3&search_qq='+qq,true);
             new_ajax.send();
             new_ajax.onreadystatechange=function () {
                 if(new_ajax.readyState===4 && new_ajax.status===200){
@@ -274,7 +271,7 @@
                 }
             };
             let new_ajax2=new XMLHttpRequest();
-            new_ajax2.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&search_qq='+qq,true);
+            new_ajax2.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&search_qq='+qq,true);
             new_ajax2.send();
             new_ajax2.onreadystatechange=function () {
                 if(new_ajax2.readyState===4 && new_ajax2.status===200){
@@ -298,7 +295,7 @@
                 }
             };
             let new_ajax3=new XMLHttpRequest();
-            new_ajax3.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=ys&search_qq='+qq,true);
+            new_ajax3.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=ys&search_qq='+qq,true);
             new_ajax3.send();
             new_ajax3.onreadystatechange=function () {
                 if(new_ajax3.readyState===4 && new_ajax3.status===200){
@@ -350,7 +347,7 @@
         //获取最新成员信息
         function get_new_player() {
             let new_ajax=new XMLHttpRequest();
-            new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_select_new_data.php?sheet_name=all',true);
+            new_ajax.open('GET','http://'+server_address+'/php/api/public/int_mysql_select_new_data.php?sheet_name=all',true);
             new_ajax.send();
             new_ajax.onreadystatechange=function (){
                 if(new_ajax.readyState===4 && new_ajax.status===200){
@@ -438,7 +435,7 @@
         }
         var number=randomNum(1,6200);
         var img1=document.getElementById('img1');
-        img1.src='http://106.53.57.90/thumbnail/'+number+'.jpg';
+        img1.src='http://'+server_address+'/thumbnail/'+number+'.jpg';
         var everybody=[2120420179,848490694,3539438185,1272602352,2774767237,1612675488,1365264810,2843599260,2647910435,1753492785,2081618670,2081618670,805258120,1348479725,1961706345,1658548955,2795732614,848688381,824822765,3361577961,997509742,2192680130,2496779165,2746853534,811592290,162295994,1269317054,1763844244,2964607609,961060863,1369392718,857626943,1581182597,1743939852,3103945871,575716004,1152070902,2987594236,2393493189,1804294850,791015206,1304676898,1753563708,1763123826,1554382747,2532565023,2540965410,3225128687,1786802842,2926301302,1559244914,3536860773,1301071923,335446283,714934085];
         var qq=randomNum(1,everybody.length-1);
         var img2=document.getElementById('img2');

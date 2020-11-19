@@ -28,6 +28,7 @@
     }
   </script>
   <script src="js/vue.js"></script>
+  <script src="js/config_1.js"></script>
   <style>
     tr:hover{background:#0084ff;}
     th{font-size:16px;font-weight:bold;}
@@ -123,7 +124,7 @@
   //获取崩坏3数据
   function get_bh3_sheet_data(){
     let new_ajax=new XMLHttpRequest();
-    new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr',true);
+    new_ajax.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr',true);
     new_ajax.send();
     new_ajax.onreadystatechange=function(){
       if(new_ajax.readyState===4 && new_ajax.status===200){

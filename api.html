@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>公用API</title>
+    <style>
+        .content{width: 80%;margin: 0 auto}
+        .t {border: 1px solid #e4e4e4;border-right: 0;margin-top: 0;}
+        .t tr.h {background-color: #f9f9f9;}
+        th, td {border-right: 1px solid #dbdbdb;border-bottom: 1px solid #dbdbdb;text-align: left;line-height: 24px;padding-left: 20px;padding-right: 20px;vertical-align: middle;word-wrap: break-word;}
+        pre{font-size: 16px}
+        hr{height:2px;width: 80%;border:none;border-top:2px dotted #185598;}
+        .span_red{color: red;font-weight: bold}
+    </style>
+    <script src="js/config_1.js"></script>
+</head>
+<body>
+<h1 style="text-align: center">您好，开发者</h1>
+<hr>
+<div class="content">
+    <h3>1.0接口名</h3>
+    <p><span class="span_red">Get_data</span></p>
+    <h3>1.1接口地址</h3>
+    <p>http://<script>document.write(server_address)</script>/php/api/public/int_mysql_get_data_sheet.php</p>
+    <h3>1.2接口描述</h3>
+    <p>
+        用于获取资料表的全部数据、按UID查询成员数据、按QQ号查询成员数据、获取排序后的资料表、获取非日期格式错误的信息。
+    </p>
+    <h3>1.3请求方式</h3>
+    <p>GET</p>
+    <h3>1.4返回格式</h3>
+    <p>JSON</p>
+    <h3>1.5详细传入参数描述</h3>
+    <table class="t">
+        <tbody>
+        <tr class="h">
+            <td>参数名</td>
+            <td>默认值</td>
+            <td>可传入的所有值 / 为分割符</td>
+            <td>值描述</td>
+        </tr>
+        <tr>
+            <td>game_name</td>
+            <td>无默认值，必要参数</td>
+            <td>bh3/pcr/ys</td>
+            <td>崩坏三/公主连结/原神</td>
+        </tr>
+        <tr class="h">
+            <td>oder_by</td>
+            <td>serial_asc</td>
+            <td>time_asc/time_des/serial_asc/serial_des</td>
+            <td>按入群时间升序/按入群时间降序/按序号升序/按序号降序</td>
+        </tr>
+        <tr>
+            <td>exclude_error</td>
+            <td>无默认值，可选参数</td>
+            <td>exclude</td>
+            <td>传入该参值后即可排除日期无效的数据</td>
+        </tr>
+        <tr class="h">
+            <td>search_qq</td>
+            <td>无默认值，可选参数</td>
+            <td>任意的QQ号</td>
+            <td>QQ号，必须是数值，优先按QQ查找</td>
+        </tr>
+        <tr>
+            <td>search_uid</td>
+            <td>无默认值，可选参数</td>
+            <td>任意的UID号</td>
+            <td>UID号，必须是数值，按QQ号与按UID查找资料，二者不可兼得</td>
+        </tr>
+        </tbody>
+    </table>
+    <h3>1.6返回值示例</h3>
+    <pre>
+        [["2019-02-03 00:00:00",
+        "1",
+        "1658548955",
+        "\u4e34\u5189",
+        "1067463032368",
+        "\u4e34\u5189",
+        "\u4e34\u5189",
+        "\u4f1a\u957f"]]
+    </pre>
+    <h3>1.7返回值详解</h3>
+    <table class="t">
+        <tbody>
+        <tr class="h">
+            <td>参数名/数组下标</td>
+            <td>值描述</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>该成员入群的时间</td>
+        </tr>
+        <tr class="h">
+            <td>1</td>
+            <td>该条数据在该表的唯一序号</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>该成员的QQ号</td>
+        </tr>
+        <tr class="h">
+            <td>3</td>
+            <td>该成员在群内的昵称</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>该成员在该表下的UID号</td>
+        </tr>
+        <tr class="h">
+            <td>5</td>
+            <td>该成员在游戏内的昵称</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>该成员在群内的惯用称呼</td>
+        </tr>
+        <tr class="h">
+            <td>7</td>
+            <td>该条数据的备注信息</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!------->
+<hr/>
+<hr/>
+<div class="content">
+    <h3>2.0接口名</h3>
+    <p><span class="span_red">Get_new_data</span></p>
+    <h3>2.1接口地址</h3>
+    <p>http://<script>document.write(server_address)</script>/php/api/public/int_mysql_select_new_data.php</p>
+    <h3>2.2接口描述</h3>
+    <p>
+        用于获取资料表的最新数据。
+    </p>
+    <h3>2.3请求方式</h3>
+    <p>GET</p>
+    <h3>2.4返回格式</h3>
+    <p>JSON</p>
+    <h3>2.5详细传入参数描述</h3>
+    <table class="t">
+        <tbody>
+        <tr class="h">
+            <td>参数名</td>
+            <td>默认值</td>
+            <td>可传入的所有值 / 为分割符</td>
+            <td>值描述</td>
+        </tr>
+        <tr>
+            <td>sheet_name</td>
+            <td>无默认值，必要参数</td>
+            <td>bh3/pcr/ys/all</td>
+            <td>崩坏三/公主连结/原神/全部</td>
+        </tr>
+        </tbody>
+    </table>
+    <h3>2.6返回值示例</h3>
+    <pre>
+        [{"insert_time":"2020-10-14 22:08:07",
+        "serial_number":"17",
+        "qq_id":"1763844244",
+        "group_nickname":"\u97f5\u667e\u4e09\u6708\u7684\u6e29\u5f66",
+        "game_id":"101602946",
+        "game_nickname":"\u97f5\u667e\u4e09\u6708\u7684\u6e29\u5f66",
+        "habit_name":null,
+        "remarks":null}]
+    </pre>
+    <h3>2.7返回值详解</h3>
+    <table class="t">
+        <tbody>
+        <tr class="h">
+            <td>参数名/数组下标</td>
+            <td>值描述</td>
+        </tr>
+        <tr>
+            <td>insert_time</td>
+            <td>该成员入群的时间</td>
+        </tr>
+        <tr class="h">
+            <td>serial_number</td>
+            <td>该条数据在该表的唯一序号</td>
+        </tr>
+        <tr>
+            <td>qq_id</td>
+            <td>该成员的QQ号</td>
+        </tr>
+        <tr class="h">
+            <td>group_nickname</td>
+            <td>该成员在群内的昵称</td>
+        </tr>
+        <tr>
+            <td>game_id</td>
+            <td>该成员在该表下的UID号</td>
+        </tr>
+        <tr class="h">
+            <td>game_nickname</td>
+            <td>该成员在游戏内的昵称</td>
+        </tr>
+        <tr>
+            <td>habit_name</td>
+            <td>该成员在群内的惯用称呼</td>
+        </tr>
+        <tr class="h">
+            <td>remarks</td>
+            <td>该条数据的备注信息</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<!--底部-->
+<div style="text-align: center;margin: 10px">
+    <p>在星空枯萎之后@2020 | 临冉 | QQ : 1658548955</p>
+</div>
+</body>
+</html>

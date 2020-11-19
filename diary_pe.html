@@ -25,6 +25,8 @@
         }
     </script>
     <script src="js/vue.js"></script>
+	<!--数据层-->
+	<script src='js/diary_data_v_2.js'></script>
     <link rel="shortcut icon" href="favicon.ico">
     <style>
         /*pe版*/
@@ -121,9 +123,13 @@
             border-radius: 10px;
         }
         #slider{opacity: 1;position: fixed;transform: rotate(90deg);height:40px;transition: 0.4s}
+        /*返回按钮*/
+        #go_home{width: 80px;height: 80px;top:44px;right: 38px;position: fixed}
     </style>
 </head>
 <body>
+<!--返回按钮-->
+<a href="menu.php"><img alt="主页" id="go_home" src="img/bh3_sheet/go_home.png"></a>
 <!--资源层-->
 <div style="display: none">
     <img src="img/diary/round.png">
@@ -163,8 +169,6 @@
         </div>
     </div>
 </div>
-<!--数据层-->
-<script src='js/diary_data.js'></script>
 <script>
     /*控制层*/
     let diary=new Vue({

@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="description" content="ATSW在星空枯萎之后，是一个查询ATSW成员资料信息的官方网站，任何游戏中，若您看到这个标志，也就意味着您可以在此站查询该玩家的资料。">
+	<meta name="keywords" content="ATSW,atsw,临冉,在星空枯萎之后,玩家资料收集,qq查询">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link rel="shortcut icon" href="favicon.ico">
     <title>在星空枯萎之后-大厅</title>
@@ -28,17 +30,19 @@
         }
     </script>
     <script src="js/vue.js"></script>
-    <script src="js/diary_data.js"></script>
+    <script src="js/config_1.js"></script>
+    <script src="js/diary_data_v_2.js"></script>
     <style>
         /*PE*/
+        hr{height:2px;width: 80%;border:none;border-top:2px dotted #185598;}
         a:link{text-decoration: none;color: #ff979b}
         a:visited{text-decoration: none;color: #ff979b}
         a:hover{text-decoration: none;color: #ff5f67}
         a:active{text-decoration: none;color: #ff979b}
         html,body{width: 100%;height: 100%;margin: 0;padding: 0}
         body{}
-        .menu_p{margin: 4px 0}
-        .menu{width: 100%;height: 210px;display: flex;flex-direction: row;flex-wrap: wrap;justify-content:center}
+        .menu_p{margin: 1px 0}
+        .menu{width: 100%;height: 190px;display: flex;flex-direction: row;flex-wrap: wrap;justify-content:center}
         .card{width: 60px;height: 60px;background:#fff5fa;margin: 10px  28px;text-align: center;border-radius: 5px}
         .menu_img{width: 60px;height: 60px;object-fit: cover;border-radius: 5px;box-shadow: 4px 4px 4px #ceb0b5;transition: 0.2s}
         .menu_img:hover{box-shadow: 6px 6px 6px #ceb0b5}
@@ -58,14 +62,12 @@
         .text{text-indent:2em;font-size: 16px;margin: 0 6px 6px 6px;}
         /*资讯层*/
         #news_layer{width: 100%;display: flex;justify-content: center;flex-wrap: wrap;}
-        .new_p{width: 80%;height: 60px;background: rgba(254, 246, 255, 0.51);border: 1px #ff97ab solid;border-radius: 5px;margin: 10px 0 10px 0;font-size: 14px}
+        .new_p{width: 80%;height: 60px;background: rgba(254, 246, 255, 0.51);border: 1px #ff97ab solid;border-radius: 5px;margin: 2px 0 2px 0;font-size: 14px}
         .new_log{width: 80%;}
         .new_head{width: 80%;height: 24px;background: rgba(254, 246, 255, 0.51);border: 1px #ff97ab solid;border-radius: 5px;margin: 10px 0 10px 0}
         .head_img{width: 50px;height:50px;margin: 5px;border-radius: 5px;float: left}
         /*悬浮按钮层*/
         #img_float{width: 30px;height: 30px;border-radius: 15px;position: fixed;top: 40%;right: 5px;border:1px solid white;transition: 0.4s}
-        /*底部*/
-        #foot{text-align: center;}
         /*动画*/
         @keyframes star_die {from{opacity:1;}to{opacity:0;}}
         @keyframes blur {from{-webkit-filter: blur(1px);filter: blur(1px)} to{-webkit-filter: blur(6px);filter: blur(6px)}}
@@ -79,38 +81,19 @@
 </div>
 <!--搜索层-->
 <div id="search">
-    <input title="" placeholder="请输入QQ号或命令，完成后点击右侧 ->" type="text" name="word" id="input_text"
+    <input title="" placeholder="按QQ输入QQ号 | 按UID输入UID并加上前缀uid" type="text" name="word" id="input_text"
            onfocus="this.style.border='#FF8C93 solid';document.getElementById('blur').style.filter='blur(1px)';document.getElementById('blur').style.webkitFilter='blur(1px)'"
            onblur="this.style.border='#FFC6D0 solid';document.getElementById('blur').style.filter='blur(6)';document.getElementById('blur').style.webkitFilter='blur(6px)'">
     <img alt="搜索" style="width: 36px;height:36px;background-repeat:no-repeat;" src="img/sousuo.png" onclick="find_qq(document.getElementById('input_text').value)">
-</div>
-<!--搜索层返回结果层-->
-<style>
-    #search_return{}
-</style>
-<div id="search_return">
-    <div>
 </div>
 <!--右侧悬浮按钮层-->
 <img src="http://q.qlogo.cn/g?b=qq&nk=1077365277&s=640&mType=friendlist" id="img_float"/>
 <!--菜单层-->
 <div class="menu">
     <div class="card">
-        <a href="index.php" target="_self">
-            <img alt="加载失败" id="img1" class="menu_img" src="">
-            <p class="menu_p">看涩兔</p>
-        </a>
-    </div>
-    <div class="card">
         <a href="bh3.html" target="_self">
             <img alt="加载失败" id="img2" class="menu_img" src="">
             <p class="menu_p">崩坏三</p>
-        </a>
-    </div>
-    <div class="card">
-        <a href="pcr.html" target="_self">
-            <img alt="加载失败" id="img3" class="menu_img" src="img/sheet.png">
-            <p class="menu_p">PCR</p>
         </a>
     </div>
     <div class="card">
@@ -120,15 +103,27 @@
         </a>
     </div>
     <div class="card">
+        <a href="pcr.html" target="_self">
+            <img alt="加载失败" id="img3" class="menu_img" src="img/sheet.png">
+            <p class="menu_p">PCR</p>
+        </a>
+    </div>
+    <div class="card">
+        <a href="index.php" target="_self">
+            <img alt="加载失败" id="img1" class="menu_img" src="">
+            <p class="menu_p">看涩兔</p>
+        </a>
+    </div>
+    <div class="card">
         <a href="diary.html"  target="_self">
-            <img alt="加载失败" class="menu_img" src="img/sheet.png">
+            <img alt="加载失败" class="menu_img" src="img/dairy.png">
             <p class="menu_p">日志</p>
         </a>
     </div>
     <div class="card">
-        <a href="bh3_source.php" target="_self">
-            <img alt="加载失败" class="menu_img" src="img/old_ver.png">
-            <p class="menu_p">崩坏三</p>
+        <a href="about.html"  target="_self">
+            <img alt="加载失败" class="menu_img" src="img/about.png">
+            <p class="menu_p">关于</p>
         </a>
     </div>
 </div>
@@ -208,10 +203,11 @@
         </div>
     </div>
 </div>
-    <!--底部-->
-    <div id="foot">
-        <p>在星空枯萎之后@2020 | 临冉 | QQ : 1658548955</p>
-    </div>
+<hr/>
+<!--底部-->
+<div style="text-align: center;margin: 10px">
+    <p>在星空枯萎之后@2020 | 临冉 | QQ : 1658548955</p>
+</div>
 <script>
     /*按钮层*/
     var img_float=document.getElementById('img_float');
@@ -248,88 +244,174 @@
     //查找QQ
     /*控制层-查找*/
     function find_qq(qq) {
-        let is_exist=false;
-        let new_ajax=new XMLHttpRequest();
-        new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3&search_qq='+qq,true);
-        new_ajax.send();
-        new_ajax.onreadystatechange=function () {
-            if(new_ajax.readyState===4 && new_ajax.status===200){
-                let data=(eval(new_ajax.responseText));
-                if(data!==undefined){
-                    //显示查询结果层
-                    is_exist=true;
-                    if(document.getElementById('bh3_search').style.display==='none'){document.getElementById('bh3_search').style.display='block'}
-                    document.getElementById('bh3_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
-                    document.getElementById('bh3_search_div').innerHTML="" +
-                        "Nick-name : "+data[0][3]+"\n" +
-                        "            <br>\n" +
-                        "            GameType : BH3\n" +
-                        "            <br>\n" +
-                        "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
-                }else {//显示查询无果层
-                    if(document.getElementById('bh3_search').style.display==='block'){document.getElementById('bh3_search').style.display='none'}
-                    document.getElementById('bh3_search_img').src='';
-                    document.getElementById('bh3_search_div').innerHTML="";
+        if(qq.substr(0,3)==='UID' || qq.substr(0,3)==='uid'){
+            qq=qq.substr(3);
+            let is_exist=false;
+            let new_ajax=new XMLHttpRequest();
+            new_ajax.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3&search_uid='+qq);
+            new_ajax.send();
+            new_ajax.onreadystatechange=function () {
+                if(new_ajax.readyState===4 && new_ajax.status===200){
+                    let data=(eval(new_ajax.responseText));
+                    if(data!==undefined){
+                        //显示查询结果层
+                        is_exist=true;
+                        if(document.getElementById('bh3_search').style.display==='none'){document.getElementById('bh3_search').style.display='block'}
+                        document.getElementById('bh3_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
+                        document.getElementById('bh3_search_div').innerHTML="" +
+                            "Nick-name : "+data[0][3]+"\n" +
+                            "            <br>\n" +
+                            "            GameType : BH3\n" +
+                            "            <br>\n" +
+                            "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
+                    }else {//显示查询无果层
+                        if(document.getElementById('bh3_search').style.display==='block'){document.getElementById('bh3_search').style.display='none'}
+                        document.getElementById('bh3_search_img').src='';
+                        document.getElementById('bh3_search_div').innerHTML="";
+                    }
                 }
-            }
-        };
-        let new_ajax2=new XMLHttpRequest();
-        new_ajax2.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&search_qq='+qq,true);
-        new_ajax2.send();
-        new_ajax2.onreadystatechange=function () {
-            if(new_ajax2.readyState===4 && new_ajax2.status===200){
-                let data=(eval(new_ajax2.responseText));
-                if(data!==undefined){
-                    //显示查询结果层
-                    is_exist=true;
-                    if(document.getElementById('pcr_search').style.display==='none'){document.getElementById('pcr_search').style.display='block'}
-                    document.getElementById('pcr_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
-                    document.getElementById('pcr_search_div').innerHTML="" +
-                        "Nick-name : "+data[0][3]+"\n" +
-                        "            <br>\n" +
-                        "            GameType : PCR\n" +
-                        "            <br>\n" +
-                        "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
-                }else {//显示查询无果层
-                    if(document.getElementById('pcr_search').style.display==='block'){document.getElementById('pcr_search').style.display='none'}
-                    document.getElementById('pcr_search_img').src='';
-                    document.getElementById('pcr_search_div').innerHTML="";
+            };
+            let new_ajax2=new XMLHttpRequest();
+            new_ajax2.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&search_uid='+qq);
+            new_ajax2.send();
+            new_ajax2.onreadystatechange=function () {
+                if(new_ajax2.readyState===4 && new_ajax2.status===200){
+                    let data=(eval(new_ajax2.responseText));
+                    if(data!==undefined){
+                        //显示查询结果层
+                        is_exist=true;
+                        if(document.getElementById('pcr_search').style.display==='none'){document.getElementById('pcr_search').style.display='block'}
+                        document.getElementById('pcr_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
+                        document.getElementById('pcr_search_div').innerHTML="" +
+                            "Nick-name : "+data[0][3]+"\n" +
+                            "            <br>\n" +
+                            "            GameType : PCR\n" +
+                            "            <br>\n" +
+                            "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
+                    }else {//显示查询无果层
+                        if(document.getElementById('pcr_search').style.display==='block'){document.getElementById('pcr_search').style.display='none'}
+                        document.getElementById('pcr_search_img').src='';
+                        document.getElementById('pcr_search_div').innerHTML="";
+                    }
                 }
-            }
-        };
-        let new_ajax3=new XMLHttpRequest();
-        new_ajax3.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=ys&search_qq='+qq,true);
-        new_ajax3.send();
-        new_ajax3.onreadystatechange=function () {
-            if(new_ajax3.readyState===4 && new_ajax3.status===200){
-                let data=(eval(new_ajax3.responseText));
-                if(data!==undefined){
-                    //显示查询结果层
-                    is_exist=true;
-                    if(document.getElementById('ys_search').style.display==='none'){document.getElementById('ys_search').style.display='block'}
-                    document.getElementById('ys_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
-                    document.getElementById('ys_search_div').innerHTML="" +
-                        "Nick-name : "+data[0][3]+"\n" +
-                        "            <br>\n" +
-                        "            GameType : 原神\n" +
-                        "            <br>\n" +
-                        "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
-                }else {//显示查询无果层
-                    if(document.getElementById('ys_search').style.display==='block'){document.getElementById('ys_search').style.display='none'}
-                    document.getElementById('ys_search_img').src='';
-                    document.getElementById('ys_search_div').innerHTML="";
+            };
+            let new_ajax3=new XMLHttpRequest();
+            new_ajax3.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=ys&search_uid='+qq);
+            new_ajax3.send();
+            new_ajax3.onreadystatechange=function () {
+                if(new_ajax3.readyState===4 && new_ajax3.status===200){
+                    let data=(eval(new_ajax3.responseText));
+                    if(data!==undefined){
+                        //显示查询结果层
+                        is_exist=true;
+                        if(document.getElementById('ys_search').style.display==='none'){document.getElementById('ys_search').style.display='block'}
+                        document.getElementById('ys_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
+                        document.getElementById('ys_search_div').innerHTML="" +
+                            "Nick-name : "+data[0][3]+"\n" +
+                            "            <br>\n" +
+                            "            GameType : 原神\n" +
+                            "            <br>\n" +
+                            "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
+                    }else {//显示查询无果层
+                        if(document.getElementById('ys_search').style.display==='block'){document.getElementById('ys_search').style.display='none'}
+                        document.getElementById('ys_search_img').src='';
+                        document.getElementById('ys_search_div').innerHTML="";
+                    }
                 }
-            }
-            setTimeout(function () {
-                if(is_exist){
-                    document.getElementById('search_content').style.display='block';
-                    document.getElementById('search_error').style.display='none'
-                }else {
-                    document.getElementById('search_content').style.display='none';
-                    document.getElementById('search_error').style.display='block'
+                setTimeout(function () {
+                    if(is_exist){
+                        document.getElementById('search_content').style.display='block';
+                        document.getElementById('search_error').style.display='none'
+                    }else {
+                        document.getElementById('search_content').style.display='none';
+                        document.getElementById('search_error').style.display='block'
+                    }
+                },100)
+            };
+        }else {
+            let is_exist=false;
+            let new_ajax=new XMLHttpRequest();
+            new_ajax.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3&search_qq='+qq);
+            new_ajax.send();
+            new_ajax.onreadystatechange=function () {
+                if(new_ajax.readyState===4 && new_ajax.status===200){
+                    let data=(eval(new_ajax.responseText));
+                    if(data!==undefined){
+                        //显示查询结果层
+                        is_exist=true;
+                        if(document.getElementById('bh3_search').style.display==='none'){document.getElementById('bh3_search').style.display='block'}
+                        document.getElementById('bh3_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
+                        document.getElementById('bh3_search_div').innerHTML="" +
+                            "Nick-name : "+data[0][3]+"\n" +
+                            "            <br>\n" +
+                            "            GameType : BH3\n" +
+                            "            <br>\n" +
+                            "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
+                    }else {//显示查询无果层
+                        if(document.getElementById('bh3_search').style.display==='block'){document.getElementById('bh3_search').style.display='none'}
+                        document.getElementById('bh3_search_img').src='';
+                        document.getElementById('bh3_search_div').innerHTML="";
+                    }
                 }
-            },100)
-        };
+            };
+            let new_ajax2=new XMLHttpRequest();
+            new_ajax2.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=pcr&search_qq='+qq);
+            new_ajax2.send();
+            new_ajax2.onreadystatechange=function () {
+                if(new_ajax2.readyState===4 && new_ajax2.status===200){
+                    let data=(eval(new_ajax2.responseText));
+                    if(data!==undefined){
+                        //显示查询结果层
+                        is_exist=true;
+                        if(document.getElementById('pcr_search').style.display==='none'){document.getElementById('pcr_search').style.display='block'}
+                        document.getElementById('pcr_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
+                        document.getElementById('pcr_search_div').innerHTML="" +
+                            "Nick-name : "+data[0][3]+"\n" +
+                            "            <br>\n" +
+                            "            GameType : PCR\n" +
+                            "            <br>\n" +
+                            "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
+                    }else {//显示查询无果层
+                        if(document.getElementById('pcr_search').style.display==='block'){document.getElementById('pcr_search').style.display='none'}
+                        document.getElementById('pcr_search_img').src='';
+                        document.getElementById('pcr_search_div').innerHTML="";
+                    }
+                }
+            };
+            let new_ajax3=new XMLHttpRequest();
+            new_ajax3.open('GET','http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=ys&search_qq='+qq);
+            new_ajax3.send();
+            new_ajax3.onreadystatechange=function () {
+                if(new_ajax3.readyState===4 && new_ajax3.status===200){
+                    let data=(eval(new_ajax3.responseText));
+                    if(data!==undefined){
+                        //显示查询结果层
+                        is_exist=true;
+                        if(document.getElementById('ys_search').style.display==='none'){document.getElementById('ys_search').style.display='block'}
+                        document.getElementById('ys_search_img').src='http://q.qlogo.cn/g?b=qq&nk='+data[0][2]+'&s=640&mType=friendlist';
+                        document.getElementById('ys_search_div').innerHTML="" +
+                            "Nick-name : "+data[0][3]+"\n" +
+                            "            <br>\n" +
+                            "            GameType : 原神\n" +
+                            "            <br>\n" +
+                            "            UID : "+data[0][4]+"&nbsp;&nbsp;QQ : "+data[0][2];
+                    }else {//显示查询无果层
+                        if(document.getElementById('ys_search').style.display==='block'){document.getElementById('ys_search').style.display='none'}
+                        document.getElementById('ys_search_img').src='';
+                        document.getElementById('ys_search_div').innerHTML="";
+                    }
+                }
+                setTimeout(function () {
+                    if(is_exist){
+                        document.getElementById('search_content').style.display='block';
+                        document.getElementById('search_error').style.display='none'
+                    }else {
+                        document.getElementById('search_content').style.display='none';
+                        document.getElementById('search_error').style.display='block'
+                    }
+                },100)
+            };
+        }
     }
     //资讯层
     var datas=[];
@@ -350,7 +432,7 @@
     //获取最新成员信息
     function get_new_player() {
         let new_ajax=new XMLHttpRequest();
-        new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_select_new_data.php?sheet_name=all',true);
+        new_ajax.open('GET','http://'+server_address+'/php/api/public/int_mysql_select_new_data.php?sheet_name=all',true);
         new_ajax.send();
         new_ajax.onreadystatechange=function (){
             if(new_ajax.readyState===4 && new_ajax.status===200){
@@ -438,7 +520,7 @@
     }
     var number=randomNum(1,6200);
     var img1=document.getElementById('img1');
-    img1.src='http://106.53.57.90/thumbnail/'+number+'.jpg';
+    img1.src='http://'+server_address+'/thumbnail/'+number+'.jpg';
     var everybody=[2120420179,848490694,3539438185,1272602352,2774767237,1612675488,1365264810,2843599260,2647910435,1753492785,2081618670,2081618670,805258120,1348479725,1961706345,1658548955,2795732614,848688381,824822765,3361577961,997509742,2192680130,2496779165,2746853534,811592290,162295994,1269317054,1763844244,2964607609,961060863,1369392718,857626943,1581182597,1743939852,3103945871,575716004,1152070902,2987594236,2393493189,1804294850,791015206,1304676898,1753563708,1763123826,1554382747,2532565023,2540965410,3225128687,1786802842,2926301302,1559244914,3536860773,1301071923,335446283,714934085];
     var qq=randomNum(1,everybody.length-1);
     var img2=document.getElementById('img2');

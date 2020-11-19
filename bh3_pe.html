@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="favicon.ico">
-    <title>在星空枯萎之后-移动端</title><!--选择非弹性布局-->
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <title>在星空枯萎之后</title>
     <script>
         function judge() {
             var userAgentInfo = navigator.userAgent;
@@ -28,366 +28,151 @@
         }
     </script>
     <script src="js/vue.js"></script>
+    <script src="js/config_1.js"></script>
     <style>
-        /*动画*/
-        @keyframes card_show{from {height:76px;} to {height:200px;}}
-        @keyframes card_hide{from {height:200px;} to {height:76px;}}
-        @keyframes pao_ma_deng {
-            0%{
-                background:white;
-            }
-            25%{
-                background: #4781ff;
-            }
-            50%{
-                background: #b26498;
-            }
-            100%{
-                background: red;
-            }
+        /**/
+        hr{height:2px;width: 80%;border:none;border-top:2px dotted #185598;}
+        html body{padding: 0;margin: 0}
+        /*menu*/
+        input, button {border: none;outline: none;}
+        .tl-price-input{
+            width: 100%;
+            border: 1px solid #ccc;
+            padding: 7px 0;
+            background: #F4F4F7;
+            border-radius: 3px;
+            padding-left:5px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+        .tl-price-input:focus{
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
         }
-        @keyframes game_shade {
-            from{top:-100%}
-            to{top:4%}
-        }
-        @keyframes game_shade_2 {
-            from{top:4%}
-            to{top:-100%}
-        }
-        /*卡片*/
-        #show{width:84%;position:absolute;left:5%;top:26px}
-        .card{width:20%;height:76px;overflow:hidden;margin:5px;transition:0.4s;}
-        .head_portrait{width:90%;border-radius:90%;margin-left: 3px}
-        .card_p{width:90%;text-align:center;font-size:8px;margin:2px 0 9px 0}
-        /*背景*/
-        html{width: 100%;height: 100%;overflow-x: hidden;overflow-y:scroll;}
-        html::-webkit-scrollbar{width: 10px;height: 1px;}
-        html::-webkit-scrollbar-thumb{border-radius: 10px;-webkit-box-shadow: inset 0 0 5px rgb(221, 223, 255);background: rgb(157, 154, 255);}
-        html::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 5px rgb(218, 216, 255);border-radius:10px;background:#c4c6ed;}
-        body{width:100%;height:100%;margin:0}
-        #background{width:100%;height:100%;margin:0;border:0;padding:0;position:absolute;top:0;z-index:-10}
-        #background_img{width:100%;height:100%;object-fit: cover;background:url("img/bronya.jpg") no-repeat center center;background-size:100% 100%;}
-        #background_color{position:absolute;width:100%;height:560px;top:100%;background:white}
-        .bg-blur{float:left;width:100%;background-repeat:no-repeat;background-position:center;background-size:cover;-webkit-filter:blur(4px);-moz-filter:blur(4px);-o-filter:blur(4px);-ms-filter:blur(4px);filter:blur(4px);}
-        /*菜单*/
-        #menu{width:86%;height:26px;background:rgba(205,207,255,0.51);position:fixed;top:0;left:8%;margin: 0;border-radius:0 0 20px 20px;z-index:100}
-        #menu_ul{width:100%;height:26px;list-style:none;margin:0;padding: 0 0 0 3px}
-        .menu_li{width:20%;height:26px;left:0;margin:6px 0 0 0;float:left;font-size:10px}
-        a{text-decoration:none;}
-        a:link{color:#4058ff}
-        a:visited{color:#4058ff}
-        a:active{color:red}
-        #search{display:none;}
-        #search input{border:0;border-radius:2px;outline:none;width:90px;height:18px;font-size:8px;}
-        #starfish_1{width: 10px;position: fixed;top:6px;left:25px}
-        #starfish_2{width: 10px;position: fixed;top:14px;left:40px}
-        #starfish_2_1{width: 10px;position: fixed;top:7px;left:92px}
-        #starfish_3{width: 10px;position: fixed;top:10px;left:149px}
-        #starfish_4{width: 10px;position: fixed;top:15px;left:180px}
-        #starfish_5{width: 10px;position: fixed;top:-1px;left:240px}
-        #starfish_5_1{width: 10px;position: fixed;top:18px;left:280px}
-        #starfish_6{width: 10px;position: fixed;top:13px;left:220px}
-        #summer{width: 20px;position: fixed;top:6px;left:4px}
-        #game_shade{background: rgba(255, 255, 255, 0.15);width: 100%;height: 94%;position: fixed;top:-100%;z-index: 1000;transition: 1s}
-        #game_over{width: 120px;height:120px;border-radius: 120px;position: fixed;top:-100%;transition: 1s}
-        #bgm{width: 300px;height: 40px;position: fixed;bottom:10px;left:12%;outline: 0}
-        #bgm_1{display: none}
+        #menu_content{background: rgba(255, 255, 255, 0.51);text-align: center;width: 100%;height: 80px;position: fixed;z-index: 50}
+        .ant-btn {height: 30px;line-height: 1.499;position: relative;display: inline-block;font-weight: 400;white-space: nowrap;text-align: center;background-image: none;border: 1px solid transparent;-webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.015);box-shadow: 0 2px 0 rgba(0,0,0,0.015);cursor: pointer;-webkit-transition: all .3s cubic-bezier(.645, .045, .355, 1);transition: all .3s cubic-bezier(.645, .045, .355, 1);-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;-ms-touch-action: manipulation;touch-action: manipulation;padding: 0 15px;font-size: 14px;border-radius: 4px;color: rgba(0,0,0,0.65);background-color: #fff;border-color: #d9d9d9;}
+        .ant-btn-red {color: #fff;background-color: #FF5A44;border-color: #FF5A44;text-shadow: 0 -1px 0 rgba(0,0,0,0.12);-webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.045);box-shadow: 0 2px 0 rgba(0,0,0,0.045);}
+        #close_menu{width: 30px;height: 30px;top:10px;right: 10px;position: fixed;z-index: 100;transition: 0.4s}
+        #go_home{width: 32px;height: 32px;top:44px;right: 9px;position: fixed}
+        /*数据显示层*/
+        #sheet_data{width: 100%;height:auto;display: flex;justify-content: center;flex-wrap: wrap;}
+        .head_img{width: 70px;height:70px;margin: 5px;border-radius: 5px;float: left}
+        .new_p{width: 90%;height: 80px;background: rgba(254, 246, 255, 0.51);border: 1px #ff97ab solid;border-radius: 5px;margin: 10px 0 10px 0;font-size: 14px}
+        .new_p:nth-child(1){margin-top: 80px}
     </style>
 </head>
 <body>
-<a name="top" style="position:absolute;top:0"></a>
-    <pre style="position:fixed;top:80px;left: -7px;font-size: 8px">
-    庆
-    典
-    结
-    束
-    ，
-    已
-    关
-    闭
-    开
-    头
-    动
-    画
-    及
-    音
-    乐
-    </pre>
-    <div id="menu"><!--顶部菜单（始终悬浮于顶部）-->
-        <img src="img/starfish1.png" id="starfish_1" alt="海星"/>
-        <img src="img/starfish2.png" id="starfish_2" alt="海星"/>
-        <img src="img/starfish2.png" id="starfish_2_1" alt="海星"/>
-        <img src="img/starfish3.png" id="starfish_3" alt="海星"/>
-        <img src="img/starfish4.png" id="starfish_4" alt="海星"/>
-        <img src="img/starfish5.png" id="starfish_5" alt="海星"/>
-        <img src="img/starfish5.png" id="starfish_5_1" alt="海星"/>
-        <img src="img/starfish6.png" id="starfish_6" alt="海星"/>
-        <img src="img/summer.png" id="summer" alt="夏"/>
-        <ul id="menu_ul">
-            <li class="menu_li">
-                <b><a href="pcr.html">公主连群员表</a></b>
-            </li>
-            <li class="menu_li">
-                <b><a href="#" onclick="night()">黑模式</a>&nbsp;&nbsp;<a href="#" onclick="night()">明模式</a></b>
-            </li>
-            <li class="menu_li">
-                <b><a href="#top">顶部</a>&nbsp;&nbsp;<a href="#bottom">底部</a></b>
-            </li>
-            <li class="menu_li">
-                <b><a href="#" onclick="
-                if(y%=2){
-                    document.getElementById('search').style.display='none';
-                    y++;
-                    console.log(y)
-                }else{
-                    document.getElementById('search').style.display='block';
-                    y++;
-                    console.log(y)
-                }">通过QQ查找</a></b>
-                <div id="search"><!--通过QQ查找信息-->
-                    <input placeholder="下次查找时请清空输入框" type="text" onchange="find(this)"/>
-                </div>
-            </li>
-            <li class="menu_li">
-                <b><a href="#" onclick="pao_ma_deng()">马灯</a>&nbsp;<a href="#" onclick="bo_lang()">波浪</a>&nbsp;<a href="#" id="unfold" onclick="unfold()">展开</a></b>
-            </li>
-        </ul>
-    </div>
-    <div id="background" class="bg-blur"><!--背景-->
-        <div id="background_img"><!--前半部分图片背景-->
-        </div>
-        <div id="background_color"><!--后半部分颜色背景-->
-        </div>
-    </div>
-    <div id="game_shade"><!--游戏用的遮蔽层-->
-        <p><b><span style="font-size:8px;line-height:110px;color:red">&nbsp;&nbsp;&nbsp;遮罩层已开启！</span></b></p>
-    </div>
-<div id="show"><!--内容界面，群员信息的方格-->
-    <div v-for="(sheet,s) in bh3_sheet_data"  v-bind:id="sheet[1]-1" class="card" onmouseout="hide_card(this)" onmousemove="show_card(this)"><!--群员卡格-->
-        <img alt="加载失败" class="head_portrait"  v-bind:src="'http://q.qlogo.cn/g?b=qq&amp;nk='+sheet[2]+'&amp;s=640&amp;mType=friendlist'"/><!--头像-->
-        <div v-bind:id="sheet[2]"><!--信息层-->
-            <p class="card_p"><b>群:</b>{{sheet[3]}}</p>
-            <p class="card_p"><b>QQ:</b>{{sheet[2]}}</p>
-            <p class="card_p"><b>游:</b>{{sheet[5]}}</p>
-            <p class="card_p"><b>游ID:</b>{{sheet[4]}}</p>
-            <p class="card_p"><b>惯称:</b>{{sheet[6]}}</p>
-            <p class="card_p"><b>备注:</b>{{sheet[7]}}</p>
+<!--菜单层-->
+<div id="menu_content">
+    <div style="width: 144px;float: left;position: fixed;top:8px;left: 2px"><input id="qq_number" class="tl-price-input" type="text" placeholder="请输入QQ号后点击查找"></div>
+    <div style="width: 60px;float: left;position: fixed;top:8px;left: 156px"><button class="ant-btn ant-btn-red" onclick="find(document.getElementById('qq_number').value)">查找</button></div>
+    <div style="width: 100px;float: left;position: fixed;top:42px;left: 2px"><a id="oder_a"><button onclick="get_bh3_sheet_data('time_asc')" id="oder_button" class="ant-btn ant-btn-red">按时间升序</button></a></div>
+    <div style="width: 100px;float: left;position: fixed;top:42px;left: 114px"><a><button onclick="get_bh3_sheet_data()" class="ant-btn ant-btn-red">按默认排序</button></a></div>
+    <a href="menu.php"><img id="go_home" src="img/bh3_sheet/go_home.png"></a>
+</div>
+<img alt="菜单" id="close_menu" src="img/bh3_sheet/close_button.png">
+<!--数据显示层-->
+<div id="sheet_data">
+    <div class="new_p" v-for="dt1 in sheet_data">
+        <img alt="头像" :src="'http://q.qlogo.cn/g?b=qq&amp;nk='+dt1.qq_id+'&amp;s=640&amp;mType=friendlist'" class="head_img">
+        <div >
+            游戏昵称 : {{dt1.game_nickname}}
+            <br>
+            群内昵称 : {{dt1.group_nickname}}
+            <br>
+            UID : {{dt1.game_id}}&nbsp;&nbsp;QQ : {{dt1.qq_id}}
+            <br>
+            入群：{{dt1.insert_time}}&nbsp;&nbsp;惯称 : {{dt1.habit_name}}
         </div>
     </div>
 </div>
+<hr>
+<!--底部-->
+<div style="text-align: center;margin: 10px">
+    <p>在星空枯萎之后@2020 | 临冉 | QQ : 1658548955</p>
+</div>
 <script>
-    //创建vue
-    var bh3_sheet_data=[];//崩坏三资料表数据
-    var bh3_sheet=new Vue({
-        el:'#show',
-        data:{'bh3_sheet_data':bh3_sheet_data}
+    //菜单栏开启相关
+    var menu_content=document.getElementById("menu_content");
+    var close_menu=document.getElementById("close_menu");
+    close_menu.addEventListener('click',function () {
+        if(menu_content.style.display==="none"){
+            menu_content.style.display="block";
+            close_menu.style.transform="rotate(0deg)";
+        }else {
+            menu_content.style.display="none";
+            close_menu.style.transform="rotate(45deg)";
+        }
     });
-    //获取崩坏3数据
-    function get_bh3_sheet_data(){
+    //创建vue
+    var new_sheet=new  Vue({
+        el:'#sheet_data',
+        data:{sheet_data:[]}
+    });
+    //获取数据
+    function get_bh3_sheet_data(oder_type){
         let new_ajax=new XMLHttpRequest();
-        new_ajax.open('GET','http://106.53.57.90/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3',true);
+        //构造url
+        let url;
+        switch (oder_type) {
+            case 'time_asc':{
+                url='http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?exclude_error=exclude&game_name=bh3&oder_by=time_asc';document.getElementById('oder_button').innerText='按时间降序';document.getElementById('oder_button').setAttribute('onclick','get_bh3_sheet_data("time_des")');break;
+            }
+            case 'time_des':{
+                url='http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?exclude_error=exclude&game_name=bh3&oder_by=time_des';document.getElementById('oder_button').innerText='按时间升序';document.getElementById('oder_button').setAttribute('onclick','get_bh3_sheet_data("time_asc")');break;
+            }
+            default:{
+                url='http://'+server_address+'/php/api/public/int_mysql_get_data_sheet.php?game_name=bh3';break;
+            }
+        }
+        new_ajax.open('GET',url,true);
         new_ajax.send();
         new_ajax.onreadystatechange=function(){
             if(new_ajax.readyState===4 && new_ajax.status===200){
-                bh3_sheet_data=eval(new_ajax.responseText);
-                bh3_sheet.bh3_sheet_data=bh3_sheet_data;//刷新数据
-                setTimeout('oder_card()',10);//排布卡片
-                return true;
+                let temp=eval(new_ajax.responseText);
+                new_sheet.sheet_data=[];//清空数据
+                if(Array.isArray(temp)){
+                    let temp_length=temp.length;
+                    for(let i=0;i<temp_length;i++){
+                        new_sheet.sheet_data.push({insert_time:temp[i][0].substr(0,10),serial_number:temp[i][1],qq_id:temp[i][2],group_nickname:temp[i][3],game_id:temp[i][4],game_nickname:temp[i][5],habit_name:temp[i][6],remarks:temp[i][7]})
+                    }
+                }
+                //return t;
             }
         };
     }
     get_bh3_sheet_data();
+    var test=[["2018-08-02 00:00:00","1","2647910435","\u6211\u5929\u547d\u4e0a\u73ed","113074452","\u6d88\u901d\u7684\u96ea\u6d41\u661f",null,null],["2020-05-08 00:00:00","2","1763123826","\u6ca1\u6709\u68a6\u60f3\u7684\u54b8\u9c7c","122177910","\u6211\u60f3\u7ffb\u4e2a\u8eab",null,null],["2020-05-09 00:00:00","3","1554382747","\u96ea\u6ce3","108949652","\u96ea\u6ce3",null,null],["2018-07-17 00:00:00","4","1348479725","\u91cd\u88c5\u5c0f\u515405\u53f7\u673a","113293625","\u9b54\u6cd5\u5c11\u5973\u5fb7\u4e3d\u50bb","\u5c0f\u5154\/\u5154\u5b50",null],["2020-01-28 00:00:00","5","162295994","\u5197\u8ac7","101485642","\u5197\u8ac7","\u5197\u8c08",null],["2020-08-09 00:00:00","6","335446283","\u4e91\u58a8\u6e05\u6d4a","106685210","\u4e91\u58a8\u6e05\u6d4ao",null,null],["2018-07-21 00:00:00","7","2994792337","\u957f\u95e8\u6709\u5e0c","110159312","\u6697\u5f71\u5927\u4eba",null,null],["2020-06-06 00:00:00","8","2924319834","\u67cf\u5d0e\u681e","501876979","\u67cf\u5d0e\u681e",null,"B\u670d\/\u6635\u79f0\u672a\u77e5"],["2019-06-01 00:00:00","9","2604239337","\u4e39\u67abEmperor","500152215","\u4e39\u67abEmperor",null,"B\u670d\/\u6635\u79f0\u672a\u77e5"],["2020-07-07 00:00:00","10","2339711851","Hoshino","120985211","acuuh",null,null],["2020-01-25 00:00:00","11","1369392718","\u6728\u3000\u4e4b\u3000\u5ddd","100550895","\u6728\u4e4b\u5ddd","\u6728\u4e4b\u5ddd",null],["2020-08-23 00:00:00","12","852623537","\u57c3\u6d1b\u5eb7\u5a1c\u9171","100025791","\u57c3\u6d1b\u5eb7\u5a1c\u9171",null,null],["2018-07-17 00:00:00","13","1961706345","\u5438\u8840\u9b3c\u5fb7\u4e3d\u55b5","101184400","\u5438\u8840\u9b3c\u5fb7\u4e3d\u55b5","\u54b2\u9171",null],["2018-10-22 00:00:00","14","979835838","\u6714\u6708","100951501","\u6b63\u4e49\u7684\u4f19\u4f34","\u6b63\u4e49\u7684\u4f19\u4f34\/\u6714\u6708",null],["2019-02-03 00:00:00","15","1658548955","\u4e34\u5189","100156739","\u4e34\u5189","\u4e34\u5189",null],["2020-09-11 00:00:00","16","2774767237","\u5fb7\u8389\u838e\u4e16\u754c\u7b2c\u4e00\u77ee","103015453","\u4e50\u513f",null,null],["2020-10-14 22:08:07","17","1763844244","\u97f5\u667e\u4e09\u6708\u7684\u6e29\u5f66","101602946","\u97f5\u667e\u4e09\u6708\u7684\u6e29\u5f66",null,null]]
 </script>
-    <img id="game_over" src=""/>
-    <!--BGM层-->
-    <audio id="bgm" loop="loop" controls=""><source src="music/nazi.mp3" type="audio/mpeg"></audio>
-    <audio id="bgm_1"><source src="music/13121.mp3" type="audio/mpeg"></audio>
 <script>
-     function playPause() {
-         var music = document.getElementById('bgm');//音频控件
-         music.play();
-    }
-    var y=0;//search专用
-    function randomNum(minNum,maxNum){//随机函数
-        switch(arguments.length){
-            case 1:
-                return parseInt(Math.random()*minNum+1,10);
-                break;
-            case 2:
-                return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
-                break;
-            default:
-                return 0;
-                break;
-        }
-    }
-    function set_pao_ma_deng(id,q) {
-        setTimeout(function (){document.getElementById(id).style.animation='pao_ma_deng 2s forwards 1'},500*q);
-    }
-    function arr_sort(arr) {//打乱数组
-        for (var i = 0; i < arr.length; i++) {
-            var iRand = parseInt(arr.length * Math.random());
-            var temp = arr[i];
-            arr[i] = arr[iRand];
-            arr[iRand] = temp;
-        }
-        return arr;
-    }
-    function pao_ma_deng() {//跑马灯
-        var cards_number=document.getElementsByClassName('card').length;
-        var card=new Array();
-        for(var i=0;i<cards_number;i++){card[i]=i}//生成数组
-        for(var q=0;q<cards_number-1;q++){
-            if(q===cards_number-2){
-                var win_id=card.shift();
-                function game_over(id) {
-                var game_over=document.getElementById('game_over');
-                var win_src='http://q.qlogo.cn/g?b=qq&nk='+(document.getElementById(id).querySelector("div").id)+'&s=640&mType=friendlist';
-                console.log('game_over的src'+win_src);
-                game_over.src=win_src;
-                }
-                game_over(win_id);
-            }
-            setTimeout(function (){document.getElementById('game_over').style.top='300px';document.getElementById('game_shade').style.top="-100%";bo_lang() },(cards_number*0.5)*1000);
-            setTimeout(function (){document.getElementById('game_over').style.top='-100%'},(cards_number*0.5)*1000+2000);
-            var new_arr=arr_sort(card);
-            var now_id=new_arr.shift();//取出并删除第一个
-            set_pao_ma_deng(now_id,q)
-        }
-        //开启游戏遮罩
-        document.getElementById('game_shade').style.top="4%";
-    }
-    function set_bo_lang(z) {
-        setTimeout(function (){show_card(document.getElementById(z))},180*z);
-        setTimeout(function (){hide_card(document.getElementById(z))},180*z+500);
-    }
-    function bo_lang() {//波浪
-        var cards_number=document.getElementsByClassName('card').length;
-        for(var z=0 ;z<=cards_number;z++){
-            set_bo_lang(z)
-        }
-    }
-    function random_music(c) {//随机放音乐
-        setTimeout(function () {
-            var x=randomNum(1-10);
-            if(x===5){
-                playPause();
-            }
-        },randomNum(1500,4500)*c);
-    }
-//    for(var c=0;c<=30;c++){
-//        random_music(c);
-//    }
-    var un=0;//展开专属
-    function unfold() {//关闭
-        if (un%=2) {
-            un++;
-            document.getElementById('game_shade').style.top="-100%";
-            document.getElementById('background_color').style.height=450+'px';
-            document.getElementById('unfold').innerText='展开';
-            var cards_number = document.getElementsByClassName('card').length;
-            for (var z = 0; z <= cards_number; z++) {
-                hide_card(document.getElementById(z))
-            }
-        } else {//展开
-            un++;
-            document.getElementById('game_shade').style.top="4%";
-			document.getElementById('background_color').style.height=1600+'px';
-            document.getElementById('unfold').innerText='关闭';
-            var cards_number = document.getElementsByClassName('card').length;
-            for (var z = 0; z <= cards_number; z++) {
-                show_card(document.getElementById(z))
-            }
-        }
-    }
-    function hide_card(element) {//隐藏
-        element.style.animation="card_hide 0.4s forwards 1";
-        var this_id=parseInt(element.id);
-        var card_number=document.getElementsByClassName('card').length;
-        for(var i=this_id+5;i<card_number;i+=5){
-            if(document.getElementById(i)){
-                var under_card=document.getElementById(i);
-                under_card.style.top=(parseInt(under_card.style.top)-120)+'px';
-            }
-        }
-    }
-    function show_card(element) {//显示
-        element.style.animation="card_show 0.4s forwards 1";
-        var this_id=parseInt(element.id);//被选中的card id
-        var card_number=document.getElementsByClassName('card').length;//card数量
-        for(var i=this_id+5;i<card_number;i+=5){
-            if(document.getElementById(i)){
-                var under_card=document.getElementById(i);
-                under_card.style.top=(parseInt(under_card.style.top)+120)+'px';
-            }
-        }
-        console.log('div'+this_id+'有鼠标移入')
-    }
-    function get_card() {//获取所有的card
-        var card_list=new Array();
-        var card_number=document.getElementsByClassName('card').length;
-        for(var i=0;i<card_number;i++){
-            card_list[i]=document.getElementsByClassName('card')[i];
-        }
-        return card_list;
-    }
-    function delete_card() {//清除所有
-        document.getElementById('show').innerHTML='';
-    }
-    function oder_card() {
-        var list_height=new Array();//高度数据
-        var left=0;//位置变量0-5，判断大于5后重置0
-        for(x=0;x<6;x++){list_height[x]=0;}//初始化高度数据
-        var card=get_card();//获取所有卡片
-        var card_leng=card.length;//长度
-        delete_card();//删除源数据
-        for(var i=0;i<card_leng;i++){
-            if(left===5){left=0;}//重置
-            var new_div=document.createElement('div');
-            new_div.innerHTML=card[i].innerHTML;
-            new_div.id=card[i].id;
-            new_div.style.position='absolute';
-            new_div.style.left=left*70+'px';
-            new_div.style.top=list_height[left]+'px';
-            new_div.className='card';
-            new_div.onmouseenter=function(){show_card(this)};
-            new_div.onmouseleave=function(){hide_card(this)};
-            var show=document.getElementById('show');
-            show.appendChild(new_div);
-            list_height[left]+=85;
-            left++;
-        }
-    }
-    oder_card();
-    var x=0;
+    //夜间模式
+    var x=1;
     function night(){
-        if(x%=2){//白
-            document.getElementById('background_img').style.background='url("img/bronya.jpg")  no-repeat center center';
-            document.getElementById('background_img').style.backgroundSize='100% 100%';
-            document.getElementById('background').className='bg-blur';
-            document.getElementById('show').style.color='black';
-            document.getElementById('background_color').style.background='white';
+        if(x%=2){
+            document.body.style="background:#3f3f3f;color:white";
+            document.getElementById("night").style.background="red";
+            document.getElementById("night").innerText="瞎眼♀模式";
             x++;
         }else{
-            document.getElementById('background_img').style.background="#3f3f3f";
-            document.getElementById('background').className='';
-            document.getElementById('show').style.color='white';
-            document.getElementById('background_color').style.background='rgb(63, 63, 63)';
+            document.body.style="background:white;color:block";
+            document.getElementById("night").style.background="black";
+            document.getElementById("night").innerText="暗黑♂模式";
             x++;
         }
     }
+    //查询
     function find(values){
-        var qq=values.value;
-        if(document.getElementById(qq)){
-            var text=document.getElementById(qq).innerText;
-            alert(text)
+        if(document.querySelector("[id='"+values+"']")){
+            let el = document.querySelector("[id='"+values+"']");
+            alert(el.innerText)
         }else{
-            alert("不存在")
+            alert("无法找到："+values)
         }
     }
-    //window.onload=function () {  bo_lang();playPause();};
-    console.log('加载完成');
 </script>
-<a name="bottom" style="position:absolute;bottom:0;"></a>
 </body>
 </html>

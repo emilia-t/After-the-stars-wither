@@ -19,8 +19,16 @@ if(isset($_GET['oder_by'])){
 }else{
     $oder='serial_number ASC';//默认按序号升序
 }
-//设置查找的qq号
-if(isset($_GET['search_qq'])){
+//设置查找的UID号
+if(isset($_GET['search_uid'])){
+    if(preg_match('/^[1-9][0-9]*$/',$_GET['search_uid'])){
+        $search="game_id={$_GET['search_uid']}";
+    }else{
+        exit();//传入的值不是UID号直接退出
+    }
+}
+//设置查找的qq号或UID（优先QQ号，若传入了QQ和UID则只考虑QQ）
+elseif(isset($_GET['search_qq'])){
     if(preg_match('/^[1-9][0-9]*$/',$_GET['search_qq'])){
         $search="qq_id={$_GET['search_qq']}";
     }else{
